@@ -1,0 +1,4188 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚂 English Quiz App - Star Rail Edition</title>
+    <style>
+        /* ==========================================
+           🎨 สไตล์สีและธีมตามที่คุณกำหนด
+           ========================================== */
+        body {
+            background: #9e9e9e; 
+            color: #000000; 
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .box {
+            background: #bdbdbd; 
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        h1, h2, h3, h4 { color: #000000; }
+        h1 { border-bottom: 2px solid #757575; padding-bottom: 10px; text-align: center; }
+        h2 { border-bottom: 1px solid #757575; padding-bottom: 5px; margin-top: 30px; text-align: center; }
+        h3 { text-align: center; }
+
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .startBtn {
+            background: #fbc02d;
+            color: #000000;
+            width: 100%;
+            padding: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            border: 2px solid #fbc02d;
+            transition: 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .startBtn:hover { 
+            filter: brightness(1.1); 
+            transform: scale(1.01);
+        }
+
+        /* สีปุ่มตัวเลือกแต่ละลำดับ */
+        #a0 { background: #fff8e1; color: #000000; }
+        #a1 { background: #ffecb3; color: #000000; }
+        #a2 { background: #ffe082; color: #000000; }
+        #a3 { background: #ffd54f; color: #000000; }
+
+        .answerBtn {
+            width: 100%;
+            display: block;
+            margin: 10px 0;
+            text-align: left;
+            padding-left: 20px;
+            transition: 0.2s;
+        }
+        .answerBtn:hover { filter: brightness(0.95); padding-left: 25px; }
+
+        /* ปุ่มย้อนกลับดีไซน์พิเศษ */
+        .backBtn {
+            background: #757575;
+            color: #ffffff;
+            width: 100%;
+            margin-top: 15px;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        .backBtn:hover {
+            background: #424242;
+        }
+
+        .hidden { display: none !important; }
+
+        /* กล่องเฉลยและการตรวจคำตอบ */
+        .review-box {
+            background: rgba(255, 255, 255, 0.4);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #000;
+        }
+        .correct-choice { background: #2e7d32 !important; color: #ffffff !important; }
+        .wrong-choice { background: #c62828 !important; color: #ffffff !important; }
+        
+        .correct-status { border-left-color: #2e7d32; color: #2e7d32; }
+        .wrong-status { border-left-color: #c62828; color: #c62828; }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        /* ⚠️ สไตล์กล่องข้อควรระวังพิเศษ */
+        .warning-box {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #fbc02d;
+            margin: 15px 0;
+        }
+        
+        /* สไตล์ตารางในบทเรียน */
+        .table-style {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .table-style th, .table-style td {
+            border: 1px solid #757575;
+            padding: 10px;
+            text-align: left;
+        }
+        .table-style th { background: rgba(0,0,0,0.05); }
+
+        /* สไตล์ระบบเลือกการตั้งค่าควิซ */
+        .setup-title {
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 5px;
+        }
+        .setup-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .setup-btn {
+            background: #fff8e1;
+            border: 2px solid #757575;
+            color: #000000;
+            padding: 12px;
+            font-size: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+        }
+        .setup-btn:hover {
+            background: #ffe082;
+        }
+        .setup-btn.selected {
+            background: #fbc02d;
+            border-color: #000000; 
+        }
+
+        /* ==========================================
+           🎬 ✨ ปรับขนาดคุมหน้าจอเว็บของ Tenor Embed ใหม่
+           ========================================== */
+        .tenor-wrap-banner {
+            max-width: 450px; 
+            margin: 0 auto 15px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .tenor-wrap-center {
+            max-width: 200px; 
+            margin: 15px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .tenor-wrap-result {
+            max-width: 140px; 
+            margin: 10px auto;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* หน้าจอโหลดข้อมูลเต็มจอ */
+        #loading-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #9e9e9e;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        .loading-logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #000000;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+        .loading-gif-container {
+            width: 80%;
+            max-width: 220px; 
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .progress-bar-container {
+            width: 250px;
+            height: 8px;
+            background: #bdbdbd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-bar { width: 0%; height: 100%; background: #000000; transition: width 0.05s linear; }
+    </style>
+</head>
+<body>
+
+<!-- ⏳ หน้าจอโหลดข้อมูลตอนเข้าเว็บ (Stelle วิ่งไล่ถังขยะ) -->
+<div id="loading-screen">
+    <div class="loading-logo">LOADING APPS...</div>
+    <div class="loading-gif-container">
+        <div class="tenor-embed" data-postid="18170624708265994501" data-share-method="host" data-aspect-ratio="1" data-width="100%"></div>
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="load-progress"></div>
+    </div>
+</div>
+
+<div class="box">
+    <!-- 📖 หน้าจอที่ 1: หน้าบทเรียน (Lesson View) -->
+    <div id="lesson-view">
+        <div class="tenor-wrap-banner">
+            <div class="tenor-embed" data-postid="10677264930613735982" data-share-method="host" data-aspect-ratio="1.77" data-width="100%"></div>
+        </div>
+        
+        <h1>🚂 Stage 1 : Pronouns + Verb to be</h1>
+        <h2>📖 บทที่ 1 : Pronouns (สรรพนาม)</h2>
+        
+        <div class="content-card">
+            <p><strong>Pronouns</strong> คือคำที่ใช้แทนคน สัตว์ หรือสิ่งของ เพื่อที่เราจะได้ไม่ต้องพูดชื่อเดิมซ้ำๆ ในประโยค</p>
+            
+            <table class="table-style">
+                <thead>
+                    <tr>
+                        <th>ประเภทประธาน</th>
+                        <th>คำสรรพนาม (Pronouns) และวิธีใช้</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>เอกพจน์ (มีแค่ 1)</strong></td>
+                        <td>
+                            • <strong>I</strong> = ฉัน/ผม (ตัวเราเองคนเดียว)<br>
+                            • <strong>He</strong> = เขา (ผู้ชาย 1 คน)<br>
+                            • <strong>She</strong> = เธอ (ผู้หญิง 1 คน)<br>
+                            • <strong>It</strong> = มัน (สัตว์ 1 ตัว / สิ่งของ 1 ชิ้น)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>พหูพจน์ (มี 2 ขึ้นไป)</strong></td>
+                        <td>
+                            • <strong>You</strong> = คุณ/พวกคุณ (จัดเป็นพหูพจน์เสมอ)<br>
+                            • <strong>We</strong> = พวกเรา (มีคนอื่นรวมถึงตัวเราอยู่ด้วย)<br>
+                            • <strong>They</strong> = พวกเขา/พวกมัน (คน สัตว์ สิ่งของ หลายจำนวน)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-card">
+            <h4>🔊 ทำความรู้จักกับ Verb to be (am / is / are)</h4>
+            <ul>
+                <li><strong>I</strong> ➡️ ใช้คู่กับ <strong>am</strong> เสมอ (หนึ่งเดียวในโลก)</li>
+                <li><strong>He / She / It</strong> ➡️ ใช้คู่กับ <strong>is</strong> (ประธานเอกพจน์)</li>
+                <li><strong>You / We / They</strong> ➡️ ใช้คู่กับ <strong>are</strong> (ประธานพหูพจน์)</li>
+            </ul>
+        </div>
+
+        <div class="warning-box">
+            <h4 style="margin-top: 0; color: #000000;">⚠️ ข้อควรระวังพิเศษเพื่อป้องกันการโดนหลอกในข้อสอบ!</h4>
+            <ul>
+                <li><strong>คำนามนับไม่ได้:</strong> Water (น้ำ), Money (เงิน) ถือเป็นเอกพจน์เสมอ ดังนั้นต้องใช้กับ <strong>is</strong> เช่น <em>Water is life.</em></li>
+                <li><strong>ประธานเชื่อมด้วย And:</strong> ชื่อคนสองคน เช่น Tom and Som ถือเป็นพหูพจน์ ต้องใช้ <strong>are</strong> ห้ามใช้ am หรือ is</li>
+            </ul>
+        </div>
+
+        <div class="content-card">
+            <h4>📌 กฎการเติม s และ es ที่คำกริยา</h4>
+            <p>ในประโยคบอกเล่าเมื่อประธานเป็น เอกพจน์ (He, She, It) คำกริยาจะต้องทำการ <strong>เติม s หรือ es เสมอ!</strong></p>
+            <ul>
+                <li>คำกริยาทั่วไป: เติม s ได้เลย เช่น walk ➡️ walks</li>
+                <li>ลงท้ายด้วย ch, sh, s, ss, x, z, o: เติม es เช่น go ➡️ goes</li>
+                <li>ลงท้ายด้วย y (หน้า y เป็นพยัญชนะ): เปลี่ยน y เป็น i แล้วเติม es เช่น cry ➡️ cries</li>
+                <li>ลงท้ายด้วย y (หน้า y เป็นสระ a,e,i,o,u): เติม s ได้ทันที เช่น play ➡️ plays</li>
+            </ul>
+        </div>
+        
+        <button class="startBtn" onclick="goToSetup()">ถัดไป: ตั้งค่าทำแบบทดสอบ</button>
+    </div>
+
+    <!-- ⚙️ หน้าจอที่ 2: หน้าตั้งค่าควิซ (Setup View) -->
+    <div id="setup-view" class="hidden">
+        <h2>⚙️ ตั้งค่าแบบทดสอบ</h2>
+        
+        <div class="tenor-wrap-center">
+            <div class="tenor-embed" data-postid="3149303119735135736" data-share-method="host" data-aspect-ratio="1.33" data-width="100%"></div>
+        </div>
+
+        <div class="setup-title">[1] เลือกความยาก:</div>
+        <div class="setup-group">
+            <div id="diff-easy" class="setup-btn selected" onclick="selectDifficulty('easy')">ง่าย (Easy)</div>
+            <div id="diff-medium" class="setup-btn" onclick="selectDifficulty('medium')">กลาง (Medium)</div>
+            <div id="diff-hard" class="setup-btn" onclick="selectDifficulty('hard')">ยาก (Hard)</div>
+        </div>
+
+        <div class="setup-title">[2] เลือกจำนวนข้อ:</div>
+        <div class="setup-group">
+            <div id="num-25" class="setup-btn selected" onclick="selectNumQuestions(25)">25 ข้อ</div>
+            <div id="num-50" class="setup-btn" onclick="selectNumQuestions(50)">50 ข้อ</div>
+            <div id="num-100" class="setup-btn" onclick="selectNumQuestions(100)">100 ข้อ</div>
+        </div>
+
+        <button class="startBtn" style="margin-top: 30px;" onclick="startQuiz()">เริ่มทำแบบทดสอบ (Start Quiz)</button>
+    </div>
+
+    <!-- 📝 หน้าจอที่ 3: หน้าทำควิซ (ระบบขยับข้อออโต้) -->
+    <div id="quiz-view" class="hidden">
+        <div class="tenor-wrap-center" id="container-gif-loading">
+            <div class="tenor-embed" data-postid="14677102733511933606" data-share-method="host" data-aspect-ratio="1" data-width="100%"></div>
+        </div>
+
+        <h3 id="quiz-progress">ข้อที่ 1 / 1</h3>
+        <div id="question-text" style="font-size: 20px; font-weight: bold; margin-bottom: 20px; padding: 10px; background: rgba(255,255,255,0.2); border-radius: 8px;">โจทย์...</div>
+        
+        <div id="options-container">
+            <!-- ปุ่มตัวเลือก #a0 - #a3 -->
+        </div>
+
+        <!-- แผงควบคุมด้านล่าง (โผล่เฉพาะเมื่อกดย้อนกลับมาดูข้อเก่า) -->
+        <div id="navigation-container" style="margin-top: 20px;">
+            <button class="backBtn" id="back-btn" onclick="backQuestion()">⬅️ ย้อนกลับไปข้อก่อนหน้า</button>
+        </div>
+    </div>
+
+    <!-- 📊 หน้าจอที่ 4: หน้าสรุปผลคะแนนและกระดาษเฉลยยาว -->
+    <div id="result-view" class="hidden">
+        <h2>📊 สรุปผลคะแนนการทดสอบ</h2>
+        <h3 style="font-size: 28px; color: #000;" id="score-text">คุณได้คะแนนรวม: 0 / 0</h3>
+        <p style="text-align: center; font-weight: bold;">เก่งมากครับ! หมั่นทบทวนเนื้อหาบ่อย ๆ นะครับ 🚀</p>
+        <button class="startBtn" onclick="restartApp()">กลับไปหน้าบทเรียนแรก</button>
+    </div>
+</div>
+
+<script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+
+<script>
+// ==========================================
+// 📊 คลังข้อสอบระดับ Easy (50 ข้อ)
+// ==========================================
+const QUESTION_BANK = {
+    easy: [
+        {
+    "question": "I _____ a student.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "A",
+    "reading": "ไอ แอม อะ สติวเดนท์",
+    "translation": "ฉันเป็นนักเรียน",
+    "reason": "I ต้องใช้คู่กับ am เสมอ"
+},
+{
+    "question": "He _____ my brother.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "B",
+    "reading": "ฮี อีส มาย บราเธอร์",
+    "translation": "เขาเป็นพี่ชายของฉัน",
+    "reason": "He เป็นเอกพจน์ ใช้กับ is"
+},
+{
+    "question": "They _____ happy.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "C",
+    "reading": "เดย์ อาร์ แฮปปี้",
+    "translation": "พวกเขามีความสุข",
+    "reason": "They เป็นพหูพจน์ ใช้กับ are"
+},
+{
+    "question": "She _____ a teacher.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "B",
+    "reading": "ชี อีส อะ ทีชเชอร์",
+    "translation": "เธอเป็นครู",
+    "reason": "She เป็นเอกพจน์ ใช้กับ is"
+},
+{
+    "question": "We _____ at home.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "C",
+    "reading": "วี อาร์ แอท โฮม",
+    "translation": "พวกเราอยู่ที่บ้าน",
+    "reason": "We เป็นพหูพจน์ ใช้กับ are"
+},
+{
+    "question": "It _____ a dog.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "B",
+    "reading": "อิท อีส อะ ด็อก",
+    "translation": "มันเป็นสุนัข",
+    "reason": "It เป็นเอกพจน์ ใช้กับ is"
+},
+{
+    "question": "You _____ my friend.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "C",
+    "reading": "ยู อาร์ มาย เฟรนท์",
+    "translation": "คุณเป็นเพื่อนของฉัน",
+    "reason": "You เป็นพหูพจน์ ใช้กับ are"
+},
+{
+    "question": "Water _____ life.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "B",
+    "reading": "วอเทอร์ อีส ไลฟ์",
+    "translation": "น้ำคือชีวิต",
+    "reason": "คำนามนับไม่ได้ถือเป็นเอกพจน์ ใช้ is"
+},
+{
+    "question": "Tom and Som _____ friends.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "C",
+    "reading": "ทอม แอนด์ สม อาร์ เฟรนส์",
+    "translation": "ทอมและสมเป็นเพื่อนกัน",
+    "reason": "มีสองคนเชื่อมด้วย and ใช้ are"
+},
+{
+    "question": "He _____ to school.",
+    "options": ["A) walk", "B) walks", "C) walkes", "D) walking"],
+    "correct": "B",
+    "reading": "ฮี วอล์คส์ ทู สคูล",
+    "translation": "เขาเดินไปโรงเรียน",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "She _____ an apple.",
+    "options": ["A) eat", "B) eats", "C) eates", "D) eating"],
+    "correct": "B",
+    "reading": "ชี อีทส์ แอน แอปเปิล",
+    "translation": "เธอกินแอปเปิล",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "They _____ football.",
+    "options": ["A) play", "B) plays", "C) playes", "D) playing"],
+    "correct": "A",
+    "reading": "เดย์ เพลย์ ฟุตบอล",
+    "translation": "พวกเขาเล่นฟุตบอล",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "It _____ to the park.",
+    "options": ["A) go", "B) goes", "C) gos", "D) going"],
+    "correct": "B",
+    "reading": "อิท โกส์ ทู เดอะ พาร์ค",
+    "translation": "มันไปที่สวนสาธารณะ",
+    "reason": "ลงท้ายด้วย o ประธานเอกพจน์เติม es"
+},
+{
+    "question": "I _____ every day.",
+    "options": ["A) run", "B) runs", "C) runnes", "D) running"],
+    "correct": "A",
+    "reading": "ไอ รัน เอวรี เดย์",
+    "translation": "ฉันวิ่งทุกวัน",
+    "reason": "I ไม่ต้องเติม s"
+},
+{
+    "question": "The cat _____.",
+    "options": ["A) sleep", "B) sleeps", "C) sleepes", "D) sleeping"],
+    "correct": "B",
+    "reading": "เดอะ แคท สลีพส์",
+    "translation": "แมวนอนหลับ",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "We _____ books.",
+    "options": ["A) read", "B) reads", "C) reades", "D) reading"],
+    "correct": "A",
+    "reading": "วี รีด บุ๊คส์",
+    "translation": "พวกเราอ่านหนังสือ",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "He _____ TV.",
+    "options": ["A) watch", "B) watchs", "C) watches", "D) watching"],
+    "correct": "C",
+    "reading": "ฮี วอทช์เชส ทีวี",
+    "translation": "เขาดูทีวี",
+    "reason": "ลงท้ายด้วย ch เติม es"
+},
+{
+    "question": "She _____ the toy.",
+    "options": ["A) fix", "B) fixs", "C) fixes", "D) fixing"],
+    "correct": "C",
+    "reading": "ชี ฟิกซ์เซส เดอะ ทอย",
+    "translation": "เธอซ่อมของเล่น",
+    "reason": "ลงท้ายด้วย x เติม es"
+},
+{
+    "question": "They _____ high.",
+    "options": ["A) jump", "B) jumps", "C) jumpes", "D) jumping"],
+    "correct": "A",
+    "reading": "เดย์ จัมพ์ ไฮ",
+    "translation": "พวกเขากระโดดสูง",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "My mom _____.",
+    "options": ["A) cook", "B) cooks", "C) cookes", "D) cooking"],
+    "correct": "B",
+    "reading": "มาย มัม คุ๊คส์",
+    "translation": "แม่ของฉันทำอาหาร",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "You _____ here.",
+    "options": ["A) sit", "B) sits", "C) sites", "D) sitting"],
+    "correct": "A",
+    "reading": "ยู ซิท เฮียร์",
+    "translation": "คุณนั่งตรงนี้",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "It _____ the plate.",
+    "options": ["A) wash", "B) washs", "C) washes", "D) washing"],
+    "correct": "C",
+    "reading": "อิท วอชเชส เดอะ เพลท",
+    "translation": "มันล้างจาน",
+    "reason": "ลงท้ายด้วย sh เติม es"
+},
+{
+    "question": "He _____ hard.",
+    "options": ["A) study", "B) studys", "C) studies", "D) studying"],
+    "correct": "C",
+    "reading": "ฮี สตัดดีส์ ฮาร์ด",
+    "translation": "เขาเรียนหนัก",
+    "reason": "หน้า y เป็นพยัญชนะ เปลี่ยน y เป็น i เติม es"
+},
+{
+    "question": "They _____ milk.",
+    "options": ["A) drink", "B) drinks", "C) drinkes", "D) drinking"],
+    "correct": "A",
+    "reading": "เดย์ ดริ๊งค์ มิลค์",
+    "translation": "พวกเอดื่มนม",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "She _____ a lot.",
+    "options": ["A) cry", "B) crys", "C) cries", "D) crying"],
+    "correct": "C",
+    "reading": "ชี ไครส์ อะ ล็อท",
+    "translation": "เธอร้องไห้เยอะมาก",
+    "reason": "หน้า y เป็นพยัญชนะ เปลี่ยน y เป็น i เติม es"
+},
+{
+    "question": "I _____ coffee.",
+    "options": ["A) like", "B) likes", "C) likees", "D) liking"],
+    "correct": "A",
+    "reading": "ไอ ไลค์ คอฟฟี่",
+    "translation": "ฉันชอบกาแฟ",
+    "reason": "I ไม่ต้องเติม s"
+},
+{
+    "question": "The bird _____.",
+    "options": ["A) fly", "B) flys", "C) flies", "D) flying"],
+    "correct": "C",
+    "reading": "เดอะ เบิร์ด ฟลายส์",
+    "translation": "นกบิน",
+    "reason": "หน้า y เป็นพยัญชนะ เปลี่ยน y เป็น i เติม es"
+},
+{
+    "question": "We _____ a lot.",
+    "options": ["A) talk", "B) talks", "C) talkes", "D) talking"],
+    "correct": "A",
+    "reading": "วี ทอล์ค อะ ล็อท",
+    "translation": "พวกเราคุยกันเยอะมาก",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "He _____ guitar.",
+    "options": ["A) play", "B) plays", "C) playes", "D) playing"],
+    "correct": "B",
+    "reading": "ฮี เพลย์ส กีตาร์",
+    "translation": "เขาเล่นกีตาร์",
+    "reason": "หน้า y เป็นสระ เติม s ได้เลย"
+},
+{
+    "question": "She _____ her work.",
+    "options": ["A) do", "B) does", "C) doies", "D) doing"],
+    "correct": "B",
+    "reading": "ชี ดาส เฮอร์ เวิร์ค",
+    "translation": "เธอทำงานของเธอ",
+    "reason": "ลงท้ายด้วย o เติม es"
+},
+{
+    "question": "They _____.",
+    "options": ["A) swim", "B) swims", "C) swimes", "D) swimming"],
+    "correct": "A",
+    "reading": "เดย์ สวิม",
+    "translation": "พวกเขาว่ายน้ำ",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "The dog _____.",
+    "options": ["A) bark", "B) barks", "C) barkes", "D) barking"],
+    "correct": "B",
+    "reading": "เดอะ ด็อก บาร์คส์",
+    "translation": "สุนัขเห่า",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "You _____ music.",
+    "options": ["A) love", "B) loves", "C) lovees", "D) loving"],
+    "correct": "A",
+    "reading": "ยู เลิฟ มิวสิค",
+    "translation": "คุณรักดนตรี",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "He _____ the test.",
+    "options": ["A) pass", "B) passs", "C) passes", "D) passing"],
+    "correct": "C",
+    "reading": "ฮี พาสเซส เดอะ เทสต์",
+    "translation": "เขาผ่านการทดสอบ",
+    "reason": "ลงท้ายด้วย ss เติม es"
+},
+{
+    "question": "She _____ me.",
+    "options": ["A) teach", "B) teachs", "C) teaches", "D) teaching"],
+    "correct": "C",
+    "reading": "ชี ทีชเชส มี",
+    "translation": "เธอสอนฉัน",
+    "reason": "ลงท้ายด้วย ch เติม es"
+},
+{
+    "question": "It _____ down.",
+    "options": ["A) drop", "B) drops", "C) dropes", "D) dropping"],
+    "correct": "B",
+    "reading": "อิท ดรอปส์ ดาวน์",
+    "translation": "มันตกลงมา",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "We _____ help.",
+    "options": ["A) need", "B) needs", "C) needes", "D) needing"],
+    "correct": "A",
+    "reading": "วี นีด เฮลป์",
+    "translation": "พวกเราต้องการความช่วยเหลือ",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "They _____ well.",
+    "options": ["A) clean", "B) cleans", "C) cleanes", "D) cleaning"],
+    "correct": "A",
+    "reading": "เดย์ คลีน เวลล์",
+    "translation": "พวกเขาทความสะอาดได้ดี",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "He _____ again.",
+    "options": ["A) try", "B) trys", "C) tries", "D) trying"],
+    "correct": "C",
+    "reading": "ฮี ไทรส์ อะเกน",
+    "translation": "เขาพยายามอีกครั้ง",
+    "reason": "หน้า y เป็นพยัญชนะ เปลี่ยน y เป็น i เติม es"
+},
+{
+    "question": "She _____ the cat.",
+    "options": ["A) see", "B) sees", "C) seees", "D) seeing"],
+    "correct": "B",
+    "reading": "ชี ซีส์ เดอะ แคท",
+    "translation": "เธอเห็นแมว",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "The sun _____.",
+    "options": ["A) shine", "B) shines", "C) shinees", "D) shining"],
+    "correct": "B",
+    "reading": "เดอะ ซัน ไชน์ส์",
+    "translation": "พระอาทิตย์ส่องแสง",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "I _____ it.",
+    "options": ["A) keep", "B) keeps", "C) keepes", "D) keeping"],
+    "correct": "A",
+    "reading": "ไอ คีพ อิท",
+    "translation": "ฉันเก็บมันไว้",
+    "reason": "I ไม่ต้องเติม s"
+},
+{
+    "question": "They _____ here.",
+    "options": ["A) wait", "B) waits", "C) waites", "D) waiting"],
+    "correct": "A",
+    "reading": "เดย์ เวท เฮียร์",
+    "translation": "พวกเขารออยู่ที่นี่",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "He _____ me.",
+    "options": ["A) help", "B) helps", "C) helpes", "D) helping"],
+    "correct": "B",
+    "reading": "ฮี เฮลป์ส มี",
+    "translation": "เขาช่วยฉัน",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "Money _____ everything.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "มันนี่ อีส เอวรีธิง",
+    "translation": "เงินคือทุกอย่าง",
+    "reason": "คำนามนับไม่ได้ใช้ is"
+},
+{
+    "question": "The sky _____ blue.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ สกาย อีส บลู",
+    "translation": "ท้องฟ้าเป็นสีฟ้า",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "My dad _____ strong.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "มาย แดด อีส สตรอง",
+    "translation": "พ่อของฉันแข็งแรง",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "The apples _____ sweet.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "ดิ แอปเปิลส์ อาร์ สวีท",
+    "translation": "แอปเปิลมีรสหวาน",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "We _____ not sad.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "วี อาร์ นอท แซด",
+    "translation": "พวกเราไม่เศร้า",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "The car _____ red.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ คาร์ อีส เรด",
+    "translation": "รถมีสีแดง",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "I _____ a student.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "A",
+    "reading": "ไอ แอม อะ สติวเดนท์",
+    "translation": "ฉันเป็นนักเรียน",
+    "reason": "I ต้องใช้คู่กับ am เสมอ"
+},
+{
+    "question": "He _____ my brother.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "B",
+    "reading": "ฮี อีส มาย บราเธอร์",
+    "translation": "เขาเป็นพี่ชายของฉัน",
+    "reason": "He เป็นเอกพจน์ ใช้กับ is"
+},
+{
+    "question": "They _____ happy.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "C",
+    "reading": "เดย์ อาร์ แฮปปี้",
+    "translation": "พวกเขามีความสุข",
+    "reason": "They เป็นพหูพจน์ ใช้กับ are"
+},
+{
+    "question": "She _____ a teacher.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "B",
+    "reading": "ชี อีส อะ ทีชเชอร์",
+    "translation": "เธอเป็นครู",
+    "reason": "She เป็นเอกพจน์ ใช้กับ is"
+},
+{
+    "question": "We _____ at home.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "C",
+    "reading": "วี อาร์ แอท โฮม",
+    "translation": "พวกเราอยู่ที่บ้าน",
+    "reason": "We เป็นพหูพจน์ ใช้กับ are"
+},
+{
+    "question": "It _____ a dog.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "B",
+    "reading": "อิท อีส อะ ด็อก",
+    "translation": "มันเป็นสุนัข",
+    "reason": "It เป็นเอกพจน์ ใช้กับ is"
+},
+{
+    "question": "You _____ my friend.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "C",
+    "reading": "ยู อาร์ มาย เฟรนท์",
+    "translation": "คุณเป็นเพื่อนของฉัน",
+    "reason": "You เป็นพหูพจน์ ใช้กับ are"
+},
+{
+    "question": "Water _____ life.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "B",
+    "reading": "วอเทอร์ อีส ไลฟ์",
+    "translation": "น้ำคือชีวิต",
+    "reason": "คำนามนับไม่ได้ถือเป็นเอกพจน์ ใช้ is"
+},
+{
+    "question": "Tom and Som _____ friends.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "C",
+    "reading": "ทอม แอนด์ สม อาร์ เฟรนส์",
+    "translation": "ทอมและสมเป็นเพื่อนกัน",
+    "reason": "มีสองคนเชื่อมด้วย and ใช้ are"
+},
+{
+    "question": "He _____ to school.",
+    "options": ["A) walk", "B) walks", "C) walkes", "D) walking"],
+    "correct": "B",
+    "reading": "ฮี วอล์คส์ ทู สคูล",
+    "translation": "เขาเดินไปโรงเรียน",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "She _____ an apple.",
+    "options": ["A) eat", "B) eats", "C) eates", "D) eating"],
+    "correct": "B",
+    "reading": "ชี อีทส์ แอน แอปเปิล",
+    "translation": "เธอกินแอปเปิล",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "They _____ football.",
+    "options": ["A) play", "B) plays", "C) playes", "D) playing"],
+    "correct": "A",
+    "reading": "เดย์ เพลย์ ฟุตบอล",
+    "translation": "พวกเขาเล่นฟุตบอล",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "It _____ to the park.",
+    "options": ["A) go", "B) goes", "C) gos", "D) going"],
+    "correct": "B",
+    "reading": "อิท โกส์ ทู เดอะ พาร์ค",
+    "translation": "มันไปที่สวนสาธารณะ",
+    "reason": "ลงท้ายด้วย o ประธานเอกพจน์เติม es"
+},
+{
+    "question": "I _____ every day.",
+    "options": ["A) run", "B) runs", "C) runnes", "D) running"],
+    "correct": "A",
+    "reading": "ไอ รัน เอวรี เดย์",
+    "translation": "ฉันวิ่งทุกวัน",
+    "reason": "I ไม่ต้องเติม s"
+},
+{
+    "question": "The cat _____.",
+    "options": ["A) sleep", "B) sleeps", "C) sleepes", "D) sleeping"],
+    "correct": "B",
+    "reading": "เดอะ แคท สลีพส์",
+    "translation": "แมวนอนหลับ",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "We _____ books.",
+    "options": ["A) read", "B) reads", "C) reades", "D) reading"],
+    "correct": "A",
+    "reading": "วี รีด บุ๊คส์",
+    "translation": "พวกเราอ่านหนังสือ",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "He _____ TV.",
+    "options": ["A) watch", "B) watchs", "C) watches", "D) watching"],
+    "correct": "C",
+    "reading": "ฮี วอทช์เชส ทีวี",
+    "translation": "เขาดูทีวี",
+    "reason": "ลงท้ายด้วย ch เติม es"
+},
+{
+    "question": "She _____ the toy.",
+    "options": ["A) fix", "B) fixs", "C) fixes", "D) fixing"],
+    "correct": "C",
+    "reading": "ชี ฟิกซ์เซส เดอะ ทอย",
+    "translation": "เธอซ่อมของเล่น",
+    "reason": "ลงท้ายด้วย x เติม es"
+},
+{
+    "question": "They _____ high.",
+    "options": ["A) jump", "B) jumps", "C) jumpes", "D) jumping"],
+    "correct": "A",
+    "reading": "เดย์ จัมพ์ ไฮ",
+    "translation": "พวกเขากระโดดสูง",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "My mom _____.",
+    "options": ["A) cook", "B) cooks", "C) cookes", "D) cooking"],
+    "correct": "B",
+    "reading": "มาย มัม คุ๊คส์",
+    "translation": "แม่ของฉันทำอาหาร",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "You _____ here.",
+    "options": ["A) sit", "B) sits", "C) sites", "D) sitting"],
+    "correct": "A",
+    "reading": "ยู ซิท เฮียร์",
+    "translation": "คุณนั่งตรงนี้",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "It _____ the plate.",
+    "options": ["A) wash", "B) washs", "C) washes", "D) washing"],
+    "correct": "C",
+    "reading": "อิท วอชเชส เดอะ เพลท",
+    "translation": "มันล้างจาน",
+    "reason": "ลงท้ายด้วย sh เติม es"
+},
+{
+    "question": "He _____ hard.",
+    "options": ["A) study", "B) studys", "C) studies", "D) studying"],
+    "correct": "C",
+    "reading": "ฮี สตัดดีส์ ฮาร์ด",
+    "translation": "เขาเรียนหนัก",
+    "reason": "หน้า y เป็นพยัญชนะ เปลี่ยน y เป็น i เติม es"
+},
+{
+    "question": "They _____ milk.",
+    "options": ["A) drink", "B) drinks", "C) drinkes", "D) drinking"],
+    "correct": "A",
+    "reading": "เดย์ ดริ๊งค์ มิลค์",
+    "translation": "พวกเอดื่มนม",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "She _____ a lot.",
+    "options": ["A) cry", "B) crys", "C) cries", "D) crying"],
+    "correct": "C",
+    "reading": "ชี ไครส์ อะ ล็อท",
+    "translation": "เธอร้องไห้เยอะมาก",
+    "reason": "หน้า y เป็นพยัญชนะ เปลี่ยน y เป็น i เติม es"
+},
+{
+    "question": "I _____ coffee.",
+    "options": ["A) like", "B) likes", "C) likees", "D) liking"],
+    "correct": "A",
+    "reading": "ไอ ไลค์ คอฟฟี่",
+    "translation": "ฉันชอบกาแฟ",
+    "reason": "I ไม่ต้องเติม s"
+},
+{
+    "question": "The bird _____.",
+    "options": ["A) fly", "B) flys", "C) flies", "D) flying"],
+    "correct": "C",
+    "reading": "เดอะ เบิร์ด ฟลายส์",
+    "translation": "นกบิน",
+    "reason": "หน้า y เป็นพยัญชนะ เปลี่ยน y เป็น i เติม es"
+},
+{
+    "question": "We _____ a lot.",
+    "options": ["A) talk", "B) talks", "C) talkes", "D) talking"],
+    "correct": "A",
+    "reading": "วี ทอล์ค อะ ล็อท",
+    "translation": "พวกเราคุยกันเยอะมาก",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "He _____ guitar.",
+    "options": ["A) play", "B) plays", "C) playes", "D) playing"],
+    "correct": "B",
+    "reading": "ฮี เพลย์ส กีตาร์",
+    "translation": "เขาเล่นกีตาร์",
+    "reason": "หน้า y เป็นสระ เติม s ได้เลย"
+},
+{
+    "question": "She _____ her work.",
+    "options": ["A) do", "B) does", "C) doies", "D) doing"],
+    "correct": "B",
+    "reading": "ชี ดาส เฮอร์ เวิร์ค",
+    "translation": "เธอทำงานของเธอ",
+    "reason": "ลงท้ายด้วย o เติม es"
+},
+{
+    "question": "They _____.",
+    "options": ["A) swim", "B) swims", "C) swimes", "D) swimming"],
+    "correct": "A",
+    "reading": "เดย์ สวิม",
+    "translation": "พวกเขาว่ายน้ำ",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "The dog _____.",
+    "options": ["A) bark", "B) barks", "C) barkes", "D) barking"],
+    "correct": "B",
+    "reading": "เดอะ ด็อก บาร์คส์",
+    "translation": "สุนัขเห่า",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "You _____ music.",
+    "options": ["A) love", "B) loves", "C) lovees", "D) loving"],
+    "correct": "A",
+    "reading": "ยู เลิฟ มิวสิค",
+    "translation": "คุณรักดนตรี",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "He _____ the test.",
+    "options": ["A) pass", "B) passs", "C) passes", "D) passing"],
+    "correct": "C",
+    "reading": "ฮี พาสเซส เดอะ เทสต์",
+    "translation": "เขาผ่านการทดสอบ",
+    "reason": "ลงท้ายด้วย ss เติม es"
+},
+{
+    "question": "She _____ me.",
+    "options": ["A) teach", "B) teachs", "C) teaches", "D) teaching"],
+    "correct": "C",
+    "reading": "ชี ทีชเชส มี",
+    "translation": "เธอสอนฉัน",
+    "reason": "ลงท้ายด้วย ch เติม es"
+},
+{
+    "question": "It _____ down.",
+    "options": ["A) drop", "B) drops", "C) dropes", "D) dropping"],
+    "correct": "B",
+    "reading": "อิท ดรอปส์ ดาวน์",
+    "translation": "มันตกลงมา",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "We _____ help.",
+    "options": ["A) need", "B) needs", "C) needes", "D) needing"],
+    "correct": "A",
+    "reading": "วี นีด เฮลป์",
+    "translation": "พวกเราต้องการความช่วยเหลือ",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "They _____ well.",
+    "options": ["A) clean", "B) cleans", "C) cleanes", "D) cleaning"],
+    "correct": "A",
+    "reading": "เดย์ คลีน เวลล์",
+    "translation": "พวกเขาทความสะอาดได้ดี",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "He _____ again.",
+    "options": ["A) try", "B) trys", "C) tries", "D) trying"],
+    "correct": "C",
+    "reading": "ฮี ไทรส์ อะเกน",
+    "translation": "เขาพยายามอีกครั้ง",
+    "reason": "หน้า y เป็นพยัญชนะ เปลี่ยน y เป็น i เติม es"
+},
+{
+    "question": "She _____ the cat.",
+    "options": ["A) see", "B) sees", "C) seees", "D) seeing"],
+    "correct": "B",
+    "reading": "ชี ซีส์ เดอะ แคท",
+    "translation": "เธอเห็นแมว",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "The sun _____.",
+    "options": ["A) shine", "B) shines", "C) shinees", "D) shining"],
+    "correct": "B",
+    "reading": "เดอะ ซัน ไชน์ส์",
+    "translation": "พระอาทิตย์ส่องแสง",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "I _____ it.",
+    "options": ["A) keep", "B) keeps", "C) keepes", "D) keeping"],
+    "correct": "A",
+    "reading": "ไอ คีพ อิท",
+    "translation": "ฉันเก็บมันไว้",
+    "reason": "I ไม่ต้องเติม s"
+},
+{
+    "question": "They _____ here.",
+    "options": ["A) wait", "B) waits", "C) waites", "D) waiting"],
+    "correct": "A",
+    "reading": "เดย์ เวท เฮียร์",
+    "translation": "พวกเขารออยู่ที่นี่",
+    "reason": "ประธานพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "He _____ me.",
+    "options": ["A) help", "B) helps", "C) helpes", "D) helping"],
+    "correct": "B",
+    "reading": "ฮี เฮลป์ส มี",
+    "translation": "เขาช่วยฉัน",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "Money _____ everything.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "มันนี่ อีส เอวรีธิง",
+    "translation": "เงินคือทุกอย่าง",
+    "reason": "คำนามนับไม่ได้ใช้ is"
+},
+{
+    "question": "The sky _____ blue.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ สกาย อีส บลู",
+    "translation": "ท้องฟ้าเป็นสีฟ้า",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "My dad _____ strong.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "มาย แดด อีส สตรอง",
+    "translation": "พ่อของฉันแข็งแรง",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "The apples _____ sweet.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "ดิ แอปเปิลส์ อาร์ สวีท",
+    "translation": "แอปเปิลมีรสหวาน",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "We _____ not sad.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "วี อาร์ นอท แซด",
+    "translation": "พวกเราไม่เศร้า",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "The car _____ red.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ คาร์ อีส เรด",
+    "translation": "รถมีสีแดง",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "The water _____ hot.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ วอเทอร์ อีส ฮอท",
+    "translation": "น้ำร้อน",
+    "reason": "Water เป็นนามนับไม่ได้ ใช้ is"
+},
+{
+    "question": "He _____ not my boss.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "B",
+    "reading": "ฮี อีส นอท มาย บอส",
+    "translation": "เขาไม่ใช่เจ้านายของฉัน",
+    "reason": "He เป็นเอกพจน์ ใช้ is"
+},
+{
+    "question": "They _____ in the pool.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "เดย์ อาร์ อิน เดอะ พูล",
+    "translation": "พวกเขาอยู่ในสระว่ายน้ำ",
+    "reason": "They เป็นพหูพจน์ ใช้ are"
+},
+{
+    "question": "It _____ a small bird.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "อิท อีส อะ สมอล เบิร์ด",
+    "translation": "มันคือนกตัวเล็ก",
+    "reason": "It เป็นเอกพจน์ ใช้ is"
+},
+{
+    "question": "Tom _____ to music.",
+    "options": ["A) listen", "B) listens", "C) listes", "D) listening"],
+    "correct": "B",
+    "reading": "ทอม ลิสเซินส์ ทู มิวสิค",
+    "translation": "ทอมฟังเพลง",
+    "reason": "ทอมเป็นเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "They _____ the project.",
+    "options": ["A) finish", "B) finishs", "C) finishes", "D) finishing"],
+    "correct": "A",
+    "reading": "เดย์ ฟินิช เดอะ โปรเจกต์",
+    "translation": "พวกเขาทำงานเสร็จ",
+    "reason": "They เป็นพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "She _____ the baby.",
+    "options": ["A) kiss", "B) kisss", "C) kisses", "D) kissing"],
+    "correct": "C",
+    "reading": "ชี คิสเซส เดอะ เบบี้",
+    "translation": "เธอจูบเด็กทารก",
+    "reason": "ลงท้ายด้วย ss เติม es"
+},
+{
+    "question": "He _____ a new car.",
+    "options": ["A) have", "B) has", "C) haves", "D) having"],
+    "correct": "B",
+    "reading": "ฮี แฮส อะ นิว คาร์",
+    "translation": "เขามีรถคันใหม่",
+    "reason": "ประธานเอกพจน์ใช้ has"
+},
+{
+    "question": "We _____ ice cream.",
+    "options": ["A) like", "B) likes", "C) likees", "D) liking"],
+    "correct": "A",
+    "reading": "วี ไลค์ ไอศกรีม",
+    "translation": "พวกเราชอบไอศกรีม",
+    "reason": "We เป็นพหูพจน์ กริยาไม่เติม s"
+},
+{
+    "question": "The sun _____ in the east.",
+    "options": ["A) rise", "B) rises", "C) riseses", "D) rising"],
+    "correct": "B",
+    "reading": "เดอะ ซัน ไรเซส อิน ดิ อีสต์",
+    "translation": "พระอาทิตย์ขึ้นทางทิศตะวันออก",
+    "reason": "พระอาทิตย์เป็นเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "They _____ to help us.",
+    "options": ["A) try", "B) trys", "C) tries", "D) trying"],
+    "correct": "A",
+    "reading": "เดย์ ไทร ทู เฮลป์ อัส",
+    "translation": "พวกเขาพยายามที่จะช่วยพวกเรา",
+    "reason": "They เป็นพหูพจน์ กริยาไม่ต้องเติม s"
+},
+{
+    "question": "She _____ the car.",
+    "options": ["A) drive", "B) drives", "C) drivees", "D) driving"],
+    "correct": "B",
+    "reading": "ชี ไดรฟ์ส เดอะ คาร์",
+    "translation": "เธอขับรถ",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "It _____ delicious.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "อิท อีส ดิลิเชียส",
+    "translation": "มันอร่อย",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "You _____ my favorite person.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "ยู อาร์ มาย เฟเฝอริท เพอร์เซิน",
+    "translation": "คุณคือคนโปรดของฉัน",
+    "reason": "You ใช้ are"
+},
+{
+    "question": "I _____ from Japan.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "A",
+    "reading": "ไอ แอม ฟรอม เจแปน",
+    "translation": "ฉันมาจากญี่ปุ่น",
+    "reason": "I ใช้ am"
+},
+{
+    "question": "They _____ good students.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "C",
+    "reading": "เดย์ อาร์ กู๊ด สติวเดนท์ส",
+    "translation": "พวกเขาเป็นนักเรียนที่ดี",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "My mom _____ tea.",
+    "options": ["A) drink", "B) drinks", "C) drinkes", "D) drinking"],
+    "correct": "B",
+    "reading": "มาย มัม ดริ๊งค์ส ที",
+    "translation": "แม่ของฉันดื่มชา",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "He _____ basketball.",
+    "options": ["A) play", "B) plays", "C) playes", "D) playing"],
+    "correct": "B",
+    "reading": "ฮี เพลย์ส บาสเกตบอล",
+    "translation": "เขาเล่นบาสเกตบอล",
+    "reason": "ประธานเอกพจน์ กริยาเติม s"
+},
+{
+    "question": "We _____ the house.",
+    "options": ["A) paint", "B) paints", "C) paintes", "D) painting"],
+    "correct": "A",
+    "reading": "วี เพ้นท์ เดอะ เฮ้าส์",
+    "translation": "พวกเราทาสีบ้าน",
+    "reason": "พหูพจน์ไม่เติม s"
+},
+{
+    "question": "The baby _____.",
+    "options": ["A) cry", "B) crys", "C) cries", "D) crying"],
+    "correct": "C",
+    "reading": "เดอะ เบบี้ ไครส์",
+    "translation": "เด็กทารกร้องไห้",
+    "reason": "ประธานเอกพจน์ลงท้าย y เปลี่ยน y เป็น i เติม es"
+},
+{
+    "question": "She _____ TV at night.",
+    "options": ["A) watch", "B) watchs", "C) watches", "D) watching"],
+    "correct": "C",
+    "reading": "ชี วอทช์เชส ทีวี แอท ไนท์",
+    "translation": "เธอดูทีวีตอนกลางคืน",
+    "reason": "ประธานเอกพจน์ลงท้าย ch เติม es"
+},
+{
+    "question": "They _____ to school by bus.",
+    "options": ["A) go", "B) goes", "C) gos", "D) going"],
+    "correct": "A",
+    "reading": "เดย์ โก ทู สคูล บาย บัส",
+    "translation": "พวกเขาไปโรงเรียนโดยรถบัส",
+    "reason": "พหูพจน์กริยาไม่เติม s"
+},
+{
+    "question": "It _____ to rain.",
+    "options": ["A) begin", "B) begins", "C) begines", "D) beginning"],
+    "correct": "B",
+    "reading": "อิท บิกินส์ ทู เรน",
+    "translation": "ฝนเริ่มจะตกแล้ว",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "The books _____ heavy.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "เดอะ บุ๊คส์ อาร์ เฮฟวี่",
+    "translation": "หนังสือพวกนั้นหนัก",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "He _____ a doctor.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "ฮี อีส อะ ด็อกเตอร์",
+    "translation": "เขาเป็นหมอ",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "I _____ at home today.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "A",
+    "reading": "ไอ แอม แอท โฮม ทูเดย์",
+    "translation": "ฉันอยู่ที่บ้านวันนี้",
+    "reason": "I ใช้ am"
+},
+{
+    "question": "They _____ our guests.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "C",
+    "reading": "เดย์ อาร์ เอาเออร์ เกสท์ส",
+    "translation": "พวกเขาเป็นแขกของเรา",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "She _____ a good singer.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "ชี อีส อะ กู๊ด ซิงเกอร์",
+    "translation": "เธอเป็นนักร้องที่ดี",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "My brothers _____ tall.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "มาย บราเธอร์ส อาร์ ทอลล์",
+    "translation": "พี่น้องชายของฉันสูง",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "The wind _____ strongly.",
+    "options": ["A) blow", "B) blows", "C) blowes", "D) blowing"],
+    "correct": "B",
+    "reading": "เดอะ วินด์ โบลวส์ สตรองลี่",
+    "translation": "ลมพัดแรง",
+    "reason": "เอกพจน์กริยาเติม s"
+},
+{
+    "question": "He _____ the lesson.",
+    "options": ["A) teach", "B) teachs", "C) teaches", "D) teaching"],
+    "correct": "C",
+    "reading": "ฮี ทีชเชส เดอะ เลสเซิน",
+    "translation": "เขาสอนบทเรียน",
+    "reason": "เอกพจน์ลงท้าย ch เติม es"
+},
+{
+    "question": "They _____ to my house.",
+    "options": ["A) come", "B) comes", "C) comees", "D) coming"],
+    "correct": "A",
+    "reading": "เดย์ คัม ทู มาย เฮ้าส์",
+    "translation": "พวกเขามาที่บ้านของฉัน",
+    "reason": "พหูพจน์ไม่ต้องเติม s"
+},
+{
+    "question": "It _____ a lovely day.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "อิท อีส อะ ลัฟลี่ เดย์",
+    "translation": "มันเป็นวันที่น่ารัก",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "They _____ my best friends.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "เดย์ อาร์ มาย เบสท์ เฟรนส์",
+    "translation": "พวกเขาเป็นเพื่อนสนิทของฉัน",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "Money _____ in the bag.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "มันนี่ อีส อิน เดอะ แบ็ก",
+    "translation": "เงินอยู่ในกระเป๋า",
+    "reason": "นามนับไม่ได้ใช้ is"
+},
+{
+    "question": "She _____ the piano.",
+    "options": ["A) play", "B) plays", "C) playes", "D) playing"],
+    "correct": "B",
+    "reading": "ชี เพลย์ส เดอะ เปียโน",
+    "translation": "เธอเล่นเปียโน",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "He _____ the question.",
+    "options": ["A) ask", "B) asks", "C) askes", "D) asking"],
+    "correct": "B",
+    "reading": "ฮี อาสก์ส เดอะ เควสชั่น",
+    "translation": "เขาถามคำถาม",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "We _____ the movie.",
+    "options": ["A) like", "B) likes", "C) likees", "D) liking"],
+    "correct": "A",
+    "reading": "วี ไลค์ เดอะ มูฟวี่",
+    "translation": "พวกเราชอบหนังเรื่องนี้",
+    "reason": "พหูพจน์ไม่เติม s"
+},
+{
+    "question": "They _____ to swim.",
+    "options": ["A) love", "B) loves", "C) lovees", "D) loving"],
+    "correct": "A",
+    "reading": "เดย์ เลิฟ ทู สวิม",
+    "translation": "พวกเขาชอบว่ายน้ำ",
+    "reason": "พหูพจน์ไม่เติม s"
+},
+{
+    "question": "It _____ a good idea.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "อิท อีส อะ กู๊ด ไอเดีย",
+    "translation": "มันเป็นความคิดที่ดี",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "The students _____ quiet.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "เดอะ สติวเดนท์ส อาร์ ไควเอท",
+    "translation": "นักเรียนเงียบ",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "I _____ a writer.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "A",
+    "reading": "ไอ แอม อะ ไรทเทอร์",
+    "translation": "ฉันเป็นนักเขียน",
+    "reason": "I ใช้ am"
+},
+{
+    "question": "He _____ late for work.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "B",
+    "reading": "ฮี อีส เลท ฟอร์ เวิร์ค",
+    "translation": "เขาไปทำงานสาย",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "The birds _____ singing.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "เดอะ เบิร์ดส อาร์ สิงกิ้ง",
+    "translation": "พวกนกร้องเพลง",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "She _____ very smart.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "ชี อีส เฝอรี สมาร์ท",
+    "translation": "เธอฉลาดมาก",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "They _____ waiting for us.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "C",
+    "reading": "เดย์ อาร์ เวททิ้ง ฟอร์ อัส",
+    "translation": "พวกเขากำลังรอพวกเราอยู่",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "He _____ my hero.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "ฮี อีส มาย ฮีโร่",
+    "translation": "เขาคือฮีโร่ของฉัน",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "We _____ neighbors.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "C",
+    "reading": "วี อาร์ เนเบอร์ส",
+    "translation": "พวกเราเป็นเพื่อนบ้านกัน",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "The time _____ now.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ ไทม์ อีส นาว",
+    "translation": "ถึงเวลาแล้ว",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "They _____ not here.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "C",
+    "reading": "เดย์ อาร์ นอท เฮียร์",
+    "translation": "พวกเขาไม่ได้อยู่ที่นี่",
+    "reason": "พหูพจน์ใช้ are"
+}
+],
+    medium: [
+        {
+    "question": "The group of tourists _____ waiting for the bus.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ กรุ๊ป อ็อฟ ทัวริสต์ส อีส เวททิ้ง ฟอร์ เดอะ บัส",
+    "translation": "กลุ่มนักท่องเที่ยว(หนึ่งกลุ่ม)กำลังรอรถบัส",
+    "reason": "ประธานคือ 'The group' (เอกพจน์) แม้จะมี 'tourists' อยู่ข้างหลัง"
+},
+{
+    "question": "My sister and her friend _____ going to the beach.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "มาย ซิสเทอร์ แอนด์ เฮอร์ เฟรนท์ อาร์ โกอิ้ง ทู เดอะ บีช",
+    "translation": "พี่สาวของฉันและเพื่อนของเธอกำลังไปที่ชายหาด",
+    "reason": "เชื่อมด้วย 'and' ประธานคือสองคน จึงเป็นพหูพจน์"
+},
+{
+    "question": "The news _____ very interesting today.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ นิวส์ อีส เฝอรี อินเทอเรสติ้ง ทูเดย์",
+    "translation": "ข่าวนี้(วันนี้)น่าสนใจมาก",
+    "reason": "'News' ลงท้ายด้วย s แต่ถือเป็นเอกพจน์เสมอ"
+},
+{
+    "question": "Neither my brother nor my sisters _____ at home.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "ไนเธอร์ มาย บราเธอร์ นอร์ มาย ซิสเทอร์ส อาร์ แอท โฮม",
+    "translation": "ทั้งพี่ชายและน้องสาวของฉันไม่อยู่บ้าน",
+    "reason": "ถ้ามี neither/nor ให้ดูประธานตัวใกล้กริยาที่สุด (sisters เป็นพหูพจน์)"
+},
+{
+    "question": "Mathematics _____ my favorite subject.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "แมธเธแมททิคส์ อีส มาย เฟเฝอริท ซับเจ็คท์",
+    "translation": "คณิตศาสตร์เป็นวิชาโปรดของฉัน",
+    "reason": "ชื่อวิชาที่ลงท้ายด้วย s ถือเป็นเอกพจน์เสมอ"
+},
+{
+    "question": "The box of chocolates _____ on the table.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ บ็อกซ์ อ็อฟ ช็อคโกแลตส์ อีส ออน เดอะ เทเบิล",
+    "translation": "กล่องช็อกโกแลตวางอยู่บนโต๊ะ",
+    "reason": "ประธานคือ 'The box' (เอกพจน์)"
+},
+{
+    "question": "Ten kilometers _____ a long way to walk.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เท็น กิโลเมตรส์ อีส อะ ลอง เวย์ ทู วอล์ค",
+    "translation": "ระยะทาง 10 กิโลเมตรถือว่าไกลมากสำหรับการเดิน",
+    "reason": "ระยะทาง เวลา หรือเงิน ถ้ามองเป็นหน่วยเดียวใช้เอกพจน์"
+},
+{
+    "question": "Everyone _____ to be happy.",
+    "options": ["A) want", "B) wants", "C) wantes", "D) wanting"],
+    "correct": "B",
+    "reading": "เอวรีวัน ว้อนทส์ ทู บี แฮปปี้",
+    "translation": "ทุกคนต้องการมีความสุข",
+    "reason": "คำสรรพนามกลุ่ม Everyone, Somebody ถือเป็นเอกพจน์"
+},
+{
+    "question": "The manager, along with his assistants, _____ here.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ เมเนเจอร์ อะลอง วิธ ฮิส แอสซิสแทนท์ส อีส เฮียร์",
+    "translation": "ผู้จัดการ พร้อมกับผู้ช่วยของเขา อยู่ที่นี่",
+    "reason": "ถ้ามี 'along with' กริยาต้องตามประธานตัวหน้า (manager คือเอกพจน์)"
+},
+{
+    "question": "The cat _____ its food every morning.",
+    "options": ["A) eat", "B) eats", "C) eates", "D) eating"],
+    "correct": "B",
+    "reading": "เดอะ แคท อีทส์ อิทส์ ฟู้ด เอวรี มอร์นิง",
+    "translation": "แมวกินอาหารของมันทุกเช้า",
+    "reason": "ประธานเป็นสัตว์ตัวเดียว (เอกพจน์)"
+},
+{
+    "question": "She always _____ her teeth before bed.",
+    "options": ["A) brush", "B) brushs", "C) brushes", "D) brushing"],
+    "correct": "C",
+    "reading": "ชี ออลเวย์ส บรัชเชส เฮอร์ ทีธ บีฟอร์ เบด",
+    "translation": "เธอแปรงฟันก่อนนอนเสมอ",
+    "reason": "brush ลงท้ายด้วย sh เติม es"
+},
+{
+    "question": "My dad _____ his car every weekend.",
+    "options": ["A) wash", "B) washes", "C) washs", "D) washing"],
+    "correct": "B",
+    "reading": "มาย แดด วอชเชส ฮิส คาร์ เอวรี วีคเอนด์",
+    "translation": "พ่อล้างรถของเขาทุกสุดสัปดาห์",
+    "reason": "wash ลงท้ายด้วย sh เติม es"
+},
+{
+    "question": "The baby _____ when it's hungry.",
+    "options": ["A) cry", "B) crys", "C) cries", "D) cring"],
+    "correct": "C",
+    "reading": "เดอะ เบบี้ ไครส์ เวน อิทส์ ฮังกรี",
+    "translation": "ทารกร้องไห้เมื่อหิว",
+    "reason": "หน้า y เป็นพยัญชนะ เปลี่ยน y เป็น i แล้วเติม es"
+},
+{
+    "question": "He _____ his room every day.",
+    "options": ["A) tidy", "B) tidys", "C) tidies", "D) tidying"],
+    "correct": "C",
+    "reading": "ฮี ไทดีส์ ฮิส รูม เอวรี เดย์",
+    "translation": "เขาจัดห้องของเขาทุกวัน",
+    "reason": "tidy หน้า y เป็นพยัญชนะ เปลี่ยน y เป็น i เติม es"
+},
+{
+    "question": "She _____ the piano beautifully.",
+    "options": ["A) play", "B) plays", "C) playes", "D) playing"],
+    "correct": "B",
+    "reading": "ชี เพลย์ส เดอะ เปียโน บิวตี้ฟูลลี่",
+    "translation": "เธอเล่นเปียโนได้อย่างสวยงาม",
+    "reason": "play หน้า y เป็นสระ เติม s ได้เลย"
+},
+{
+    "question": "The teacher _____ us new words.",
+    "options": ["A) teach", "B) teaches", "C) teachs", "D) teaching"],
+    "correct": "B",
+    "reading": "เดอะ ทีชเชอร์ ทีชเชส อัส นิว เวิร์ดส์",
+    "translation": "ครูสอนคำศัพท์ใหม่ให้เรา",
+    "reason": "teach ลงท้ายด้วย ch เติม es"
+},
+{
+    "question": "He _____ his work before going home.",
+    "options": ["A) finish", "B) finishs", "C) finishes", "D) finishing"],
+    "correct": "C",
+    "reading": "ฮี ฟินิชเชส ฮิส เวิร์ค บีฟอร์ โกอิ้ง โฮม",
+    "translation": "เขาทำงานเสร็จก่อนกลับบ้าน",
+    "reason": "finish ลงท้ายด้วย sh เติม es"
+},
+{
+    "question": "My brother _____ his bike to school.",
+    "options": ["A) ride", "B) rides", "C) rideses", "D) riding"],
+    "correct": "B",
+    "reading": "มาย บราเธอร์ ไรด์ส ฮิส ไบค์ ทู สคูล",
+    "translation": "พี่ชายขี่จักรยานไปโรงเรียน",
+    "reason": "ประธานเอกพจน์เติม s"
+},
+{
+    "question": "She _____ to the music loudly.",
+    "options": ["A) dance", "B) dances", "C) dancees", "D) dancing"],
+    "correct": "B",
+    "reading": "ชี แดนซ์เซส ทู เดอะ มิวสิค เลาด์ลี่",
+    "translation": "เธอเต้นรำไปกับเพลงเสียงดัง",
+    "reason": "ประธานเอกพจน์เติม s"
+},
+{
+    "question": "The earth _____ around the sun.",
+    "options": ["A) move", "B) moves", "C) movees", "D) moving"],
+    "correct": "B",
+    "reading": "ดิ เอิร์ธ มูฟส์ อะราวนด์ เดอะ ซัน",
+    "translation": "โลกหมุนรอบดวงอาทิตย์",
+    "reason": "earth เป็นเอกพจน์เติม s"
+},
+{
+    "question": "He _____ hard to pass the exam.",
+    "options": ["A) try", "B) trys", "C) tries", "D) trying"],
+    "correct": "C",
+    "reading": "ฮี ไทรส์ ฮาร์ด ทู พาส ดิ อิกแซม",
+    "translation": "เขาพยายามอย่างหนักเพื่อสอบให้ผ่าน",
+    "reason": "try เปลี่ยน y เป็น i เติม es"
+},
+{
+    "question": "The water in the lake _____ very clean.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ วอเทอร์ อิน เดอะ เลค อีส เฝอรี คลีน",
+    "translation": "น้ำในทะเลสาบสะอาดมาก",
+    "reason": "ประธานคือ water (เอกพจน์)"
+},
+{
+    "question": "These books _____ not mine.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "ดีส บุ๊คส์ อาร์ นอท มายน์",
+    "translation": "หนังสือพวกนี้ไม่ใช่ของฉัน",
+    "reason": "These books เป็นพหูพจน์ใช้ are"
+},
+{
+    "question": "Information _____ crucial for us.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "อินฟอร์เมชัน อีส ครูเชียล ฟอร์ อัส",
+    "translation": "ข้อมูลมีความสำคัญต่อพวกเรามาก",
+    "reason": "'Information' เป็นนามนับไม่ได้ (เอกพจน์)"
+},
+{
+    "question": "My friends _____ very kind to me.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "มาย เฟรนส์ อาร์ เฝอรี ไคด์ ทู มี",
+    "translation": "เพื่อนๆ ของฉันใจดีกับฉันมาก",
+    "reason": "friends เป็นพหูพจน์ใช้ are"
+},
+{
+    "question": "The luggage _____ very heavy.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ ลักเกจ อีส เฝอรี เฮฟวี่",
+    "translation": "กระเป๋าเดินทางหนักมาก",
+    "reason": "'Luggage' เป็นนามนับไม่ได้ (เอกพจน์)"
+},
+{
+    "question": "There _____ a lot of people here.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "แดร์ อาร์ อะ ล็อท อ็อฟ พีเพิล เฮียร์",
+    "translation": "มีผู้คนมากมายที่นี่",
+    "reason": "'People' เป็นพหูพจน์ใช้ are"
+},
+{
+    "question": "The set of keys _____ on the table.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ เซ็ต อ็อฟ คีย์ส อีส ออน เดอะ เทเบิล",
+    "translation": "พวงกุญแจวางอยู่บนโต๊ะ",
+    "reason": "ประธานคือ 'set' (เอกพจน์)"
+},
+{
+    "question": "Every student _____ to study hard.",
+    "options": ["A) need", "B) needs", "C) needes", "D) needing"],
+    "correct": "B",
+    "reading": "เอวรี สติวเดนท์ นีดส์ ทู สตั๊ดดี้ ฮาร์ด",
+    "translation": "นักเรียนทุกคนจำเป็นต้องเรียนอย่างหนัก",
+    "reason": "every ตามด้วยนามเอกพจน์ กริยาต้องเติม s"
+},
+{
+    "question": "The police _____ investigating the crime.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "เดอะ โปลิส อาร์ อินเวสติเกทติ้ง เดอะ ไครม์",
+    "translation": "ตำรวจกำลังสืบสวนคดีนี้",
+    "reason": "'Police' ถือเป็นนามพหูพจน์"
+},
+{
+    "question": "He _____ his homework in the evening.",
+    "options": ["A) do", "B) does", "C) doies", "D) doing"],
+    "correct": "B",
+    "reading": "ฮี ดาส ฮิส โฮมเวิร์ค อิน ดิ อีฟนิ่ง",
+    "translation": "เขาทำการบ้านในตอนเย็น",
+    "reason": "do ลงท้ายด้วย o เติม es เป็น does"
+},
+{
+    "question": "She _____ a new song every day.",
+    "options": ["A) sing", "B) sings", "C) singes", "D) singing"],
+    "correct": "B",
+    "reading": "ชี สิงส์ อะ นิว ซอง เอวรี เดย์",
+    "translation": "เธอร้องเพลงใหม่ทุกวัน",
+    "reason": "เอกพจน์กริยาเติม s"
+},
+{
+    "question": "The bird _____ in the sky.",
+    "options": ["A) fly", "B) flys", "C) flies", "D) flying"],
+    "correct": "C",
+    "reading": "เดอะ เบิร์ด ไฟลส์ อิน เดอะ สกาย",
+    "translation": "นกบินอยู่บนท้องฟ้า",
+    "reason": "fly เปลี่ยน y เป็น i เติม es"
+},
+{
+    "question": "My mom _____ delicious food.",
+    "options": ["A) cook", "B) cooks", "C) cookes", "D) cooking"],
+    "correct": "B",
+    "reading": "มาย มัม คุ๊คส์ ดิลิเชียส ฟู้ด",
+    "translation": "แม่ทำอาหารอร่อย",
+    "reason": "เอกพจน์กริยาเติม s"
+},
+{
+    "question": "The sun _____ brightly today.",
+    "options": ["A) shine", "B) shines", "C) shinees", "D) shining"],
+    "correct": "B",
+    "reading": "เดอะ ซัน ไชน์ส์ ไบรท์ลี่ ทูเดย์",
+    "translation": "พระอาทิตย์ส่องแสงสว่างจ้าวันนี้",
+    "reason": "เอกพจน์กริยาเติม s"
+},
+{
+    "question": "He _____ to the market by bike.",
+    "options": ["A) go", "B) goes", "C) gos", "D) going"],
+    "correct": "B",
+    "reading": "ฮี โกส์ ทู เดอะ มาร์เก็ต บาย ไบค์",
+    "translation": "เขาไปตลาดด้วยจักรยาน",
+    "reason": "go ลงท้ายด้วย o เติม es"
+},
+{
+    "question": "The teacher _____ the students.",
+    "options": ["A) help", "B) helps", "C) helpes", "D) helping"],
+    "correct": "B",
+    "reading": "เดอะ ทีชเชอร์ เฮลป์ส เดอะ สติวเดนท์ส",
+    "translation": "ครูช่วยนักเรียน",
+    "reason": "เอกพจน์กริยาเติม s"
+},
+{
+    "question": "She _____ her grandmother on Sundays.",
+    "options": ["A) visit", "B) visits", "C) visitees", "D) visiting"],
+    "correct": "B",
+    "reading": "ชี วิสิทส์ เฮอร์ แกรนด์มัมเธอร์ ออน ซันเดย์ส",
+    "translation": "เธอไปเยี่ยมคุณย่าในวันอาทิตย์",
+    "reason": "เอกพจน์กริยาเติม s"
+},
+{
+    "question": "They _____ in a big house.",
+    "options": ["A) live", "B) lives", "C) livees", "D) living"],
+    "correct": "A",
+    "reading": "เดย์ ลิฟ อิน อะ บิ๊ก เฮ้าส์",
+    "translation": "พวกเขาอาศัยอยู่ในบ้านหลังใหญ่",
+    "reason": "พหูพจน์กริยาไม่เติม s"
+},
+{
+    "question": "The boy _____ football with his friends.",
+    "options": ["A) play", "B) plays", "C) playes", "D) playing"],
+    "correct": "B",
+    "reading": "เดอะ บอย เพลย์ส ฟุตบอล วิธ ฮิส เฟรนส์",
+    "translation": "เด็กชายเล่นฟุตบอลกับเพื่อนๆ",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "The dog _____ loudly at night.",
+    "options": ["A) bark", "B) barks", "C) barkes", "D) barking"],
+    "correct": "B",
+    "reading": "เดอะ ด็อก บาร์คส์ เลาด์ลี่ แอท ไนท์",
+    "translation": "สุนัขเห่าเสียงดังในตอนกลางคืน",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "She _____ her keys every day.",
+    "options": ["A) lose", "B) loses", "C) losees", "D) losing"],
+    "correct": "B",
+    "reading": "ชี โลสเซส เฮอร์ คีย์ส เอวรี เดย์",
+    "translation": "เธอทำกุญแจหายทุกวัน",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "He _____ a lot of water.",
+    "options": ["A) drink", "B) drinks", "C) drinkes", "D) drinking"],
+    "correct": "B",
+    "reading": "ฮี ดริ๊งค์ส อะ ล็อท อ็อฟ วอเทอร์",
+    "translation": "เขาดื่มน้ำเยอะมาก",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "They _____ to the radio.",
+    "options": ["A) listen", "B) listens", "C) listes", "D) listening"],
+    "correct": "A",
+    "reading": "เดย์ ลิสเซิน ทู เดอะ เรดิโอ",
+    "translation": "พวกเขาฟังวิทยุ",
+    "reason": "พหูพจน์กริยาไม่เติม s"
+},
+{
+    "question": "The sky _____ dark at night.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ สกาย อีส ดาร์ค แอท ไนท์",
+    "translation": "ท้องฟ้ามืดในตอนกลางคืน",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "These questions _____ very difficult.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "ดีส เควสชั่นส์ อาร์ เฝอรี ดิฟฟิคัลท์",
+    "translation": "คำถามเหล่านี้ยากมาก",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "I _____ so tired right now.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "A",
+    "reading": "ไอ แอม โซ ไทร์ด ไรท์ นาว",
+    "translation": "ตอนนี้ฉันเหนื่อยมาก",
+    "reason": "I ใช้ am"
+},
+{
+    "question": "The cake _____ delicious.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ เค้ก อีส ดิลิเชียส",
+    "translation": "เค้กอร่อยมาก",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "All my friends _____ coming to the party.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "B",
+    "reading": "ออล มาย เฟรนส์ อาร์ คัมมิ่ง ทู เดอะ ปาร์ตี้",
+    "translation": "เพื่อนของฉันทุกคนกำลังมางานปาร์ตี้",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "The chair _____ broken.",
+    "options": ["A) is", "B) are", "C) am", "D) be"],
+    "correct": "A",
+    "reading": "เดอะ แชร์ อีส โบรคเค็น",
+    "translation": "เก้าอี้พังแล้ว",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "She _____ not like to drink coffee.",
+    "options": ["A) do", "B) does", "C) is", "D) are"],
+    "correct": "B",
+    "reading": "ชี ดาส นอท ไลค์ ทู ดริ๊งค์ คอฟฟี่",
+    "translation": "เธอไม่ชอบดื่มกาแฟ",
+    "reason": "ประธานเอกพจน์ในประโยคปฏิเสธ ใช้ does not"
+},
+{
+    "question": "They _____ not know the answer.",
+    "options": ["A) do", "B) does", "C) is", "D) are"],
+    "correct": "A",
+    "reading": "เดย์ ดู นอท โน เดอะ แอนเซอร์",
+    "translation": "พวกเขาไม่รู้คำตอบ",
+    "reason": "ประธานพหูพจน์ในประโยคปฏิเสธ ใช้ do not"
+},
+{
+    "question": "_____ he play football every day?",
+    "options": ["A) Do", "B) Does", "C) Is", "D) Are"],
+    "correct": "B",
+    "reading": "ดาส ฮี เพลย์ ฟุตบอล เอวรี เดย์",
+    "translation": "เขาเล่นฟุตบอลทุกวันใช่ไหม?",
+    "reason": "ประโยคคำถาม ประธานเอกพจน์ขึ้นต้นด้วย Does"
+},
+{
+    "question": "_____ they go to school by bus?",
+    "options": ["A) Do", "B) Does", "C) Is", "D) Are"],
+    "correct": "A",
+    "reading": "ดู เดย์ โก ทู สคูล บาย บัส",
+    "translation": "พวกเขาไปโรงเรียนโดยรถบัสใช่ไหม?",
+    "reason": "ประโยคคำถาม ประธานพหูพจน์ขึ้นต้นด้วย Do"
+},
+{
+    "question": "He _____ not play the guitar.",
+    "options": ["A) do", "B) does", "C) is", "D) are"],
+    "correct": "B",
+    "reading": "ฮี ดาส นอท เพลย์ เดอะ กีตาร์",
+    "translation": "เขาเล่นกีตาร์ไม่เป็น",
+    "reason": "ปฏิเสธสำหรับประธานเอกพจน์ใช้ does not"
+},
+{
+    "question": "We _____ not live in Bangkok.",
+    "options": ["A) do", "B) does", "C) is", "D) are"],
+    "correct": "A",
+    "reading": "วี ดู นอท ลิฟ อิน แบงค็อก",
+    "translation": "พวกเราไม่ได้อาศัยอยู่ในกรุงเทพฯ",
+    "reason": "ปฏิเสธสำหรับประธานพหูพจน์ใช้ do not"
+},
+{
+    "question": "My father _____ not smoke.",
+    "options": ["A) do", "B) does", "C) is", "D) are"],
+    "correct": "B",
+    "reading": "มาย ฟาเธอร์ ดาส นอท สโมค",
+    "translation": "พ่อของฉันไม่สูบบุหรี่",
+    "reason": "ประธานเอกพจน์ใช้ does not"
+},
+{
+    "question": "_____ your mother cook dinner?",
+    "options": ["A) Do", "B) Does", "C) Is", "D) Are"],
+    "correct": "B",
+    "reading": "ดาส ยัวร์ มาเธอร์ คุ๊ค ดินเนอร์",
+    "translation": "แม่ของคุณทำอาหารเย็นไหม?",
+    "reason": "ประธานเอกพจน์ขึ้นต้นด้วย Does"
+},
+{
+    "question": "She _____ not have a car.",
+    "options": ["A) do", "B) does", "C) is", "D) are"],
+    "correct": "B",
+    "reading": "ชี ดาส นอท แฮฝ อะ คาร์",
+    "translation": "เธอไม่มีรถยนต์",
+    "reason": "ประธานเอกพจน์ใช้ does not"
+},
+{
+    "question": "They _____ not want to go out.",
+    "options": ["A) do", "B) does", "C) is", "D) are"],
+    "correct": "A",
+    "reading": "เดย์ ดู นอท ว้อนท์ ทู โก เอ้าท์",
+    "translation": "พวกเขาไม่อยากออกไปข้างนอก",
+    "reason": "ประธานพหูพจน์ใช้ do not"
+},
+{
+    "question": "The train _____ at 8 AM.",
+    "options": ["A) leave", "B) leaves", "C) leaved", "D) leaving"],
+    "correct": "B",
+    "reading": "เดอะ เทรน ลีฟส์ แอท เอท เอเอ็ม",
+    "translation": "รถไฟออกตอน 8 โมงเช้า",
+    "reason": "ตารางเวลาใช้ Present Simple เอกพจน์กริยาเติม s"
+},
+{
+    "question": "The movie _____ at 7 PM.",
+    "options": ["A) start", "B) starts", "C) started", "D) starting"],
+    "correct": "B",
+    "reading": "เดอะ มูฟวี่ สตาร์ทส์ แอท เซเว่น พีเอ็ม",
+    "translation": "หนังเริ่มตอนหนึ่งทุ่ม",
+    "reason": "ประธานเอกพจน์กริยาเติม s"
+},
+{
+    "question": "My brother _____ to work every day.",
+    "options": ["A) walk", "B) walks", "C) walked", "D) walking"],
+    "correct": "B",
+    "reading": "มาย บราเธอร์ วอล์คส์ ทู เวิร์ค เอวรี เดย์",
+    "translation": "พี่ชายเดินไปทำงานทุกวัน",
+    "reason": "เอกพจน์กริยาเติม s"
+},
+{
+    "question": "They _____ in the park on Sundays.",
+    "options": ["A) run", "B) runs", "C) ranned", "D) running"],
+    "correct": "A",
+    "reading": "เดย์ รัน อิน เดอะ พาร์ค ออน ซันเดย์ส",
+    "translation": "พวกเขาวิ่งในสวนสาธารณะในวันอาทิตย์",
+    "reason": "พหูพจน์กริยาไม่เติม s"
+},
+{
+    "question": "Water _____ at 100 degrees Celsius.",
+    "options": ["A) boil", "B) boils", "C) boiled", "D) boiling"],
+    "correct": "B",
+    "reading": "วอเทอร์ บอยล์ส์ แอท วันฮันเดรด ดีกรี เซลเซียส",
+    "translation": "น้ำเดือดที่อุณหภูมิ 100 องศาเซลเซียส",
+    "reason": "ความจริงทางธรรมชาติ เอกพจน์เติม s"
+},
+{
+    "question": "He _____ English very well.",
+    "options": ["A) speak", "B) speaks", "C) speaked", "D) speaking"],
+    "correct": "B",
+    "reading": "ฮี สปีคส์ อิงลิช เฝอรี เวลล์",
+    "translation": "เขาพูดภาษาอังกฤษได้ดีมาก",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "She _____ yoga every morning.",
+    "options": ["A) do", "B) does", "C) did", "D) doing"],
+    "correct": "B",
+    "reading": "ชี ดาส โยคะ เอวรี มอร์นิง",
+    "translation": "เธอเล่นโยคะทุกเช้า",
+    "reason": "ประธานเอกพจน์ใช้ does"
+},
+{
+    "question": "They _____ football in the yard.",
+    "options": ["A) play", "B) plays", "C) played", "D) playing"],
+    "correct": "A",
+    "reading": "เดย์ เพลย์ ฟุตบอล อิน เดอะ ยาร์ด",
+    "translation": "พวกเขาเล่นฟุตบอลในสนาม",
+    "reason": "พหูพจน์กริยาไม่เติม s"
+},
+{
+    "question": "The bird _____ on the branch.",
+    "options": ["A) sing", "B) sings", "C) singed", "D) singing"],
+    "correct": "B",
+    "reading": "เดอะ เบิร์ด สิงส์ ออน เดอะ แบรนช์",
+    "translation": "นกร้องเพลงบนกิ่งไม้",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "The children _____ to school.",
+    "options": ["A) go", "B) goes", "C) goed", "D) going"],
+    "correct": "A",
+    "reading": "เดอะ ชิลเดรน โก ทู สคูล",
+    "translation": "เด็กๆ ไปโรงเรียน",
+    "reason": "children เป็นพหูพจน์ใช้ go"
+},
+{
+    "question": "My cat _____ milk.",
+    "options": ["A) like", "B) likes", "C) liked", "D) liking"],
+    "correct": "B",
+    "reading": "มาย แคท ไลค์ส มิลค์",
+    "translation": "แมวของฉันชอบนม",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "He _____ to the music.",
+    "options": ["A) dance", "B) dances", "C) danced", "D) dancing"],
+    "correct": "B",
+    "reading": "ฮี แดนซ์เซส ทู เดอะ มิวสิค",
+    "translation": "เขาเต้นรำไปกับเสียงเพลง",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "They _____ to help me.",
+    "options": ["A) try", "B) tries", "C) tried", "D) trying"],
+    "correct": "A",
+    "reading": "เดย์ ไทร ทู เฮลป์ มี",
+    "translation": "พวกเขาพยายามช่วยฉัน",
+    "reason": "พหูพจน์ไม่เติม s"
+},
+{
+    "question": "She _____ the dishes.",
+    "options": ["A) wash", "B) washes", "C) washed", "D) washing"],
+    "correct": "B",
+    "reading": "ชี วอชเชส เดอะ ดิชเชส",
+    "translation": "เธอล้างจาน",
+    "reason": "เอกพจน์ลงท้าย sh เติม es"
+},
+{
+    "question": "He _____ his room.",
+    "options": ["A) clean", "B) cleans", "C) cleaned", "D) cleaning"],
+    "correct": "B",
+    "reading": "ฮี คลีนส์ ฮิส รูม",
+    "translation": "เขาทำความสะอาดห้องของเขา",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "They _____ at 7 AM.",
+    "options": ["A) wake", "B) wakes", "C) waked", "D) waking"],
+    "correct": "A",
+    "reading": "เดย์ เวค แอท เซเว่น เอเอ็ม",
+    "translation": "พวกเขาตื่นนอนตอน 7 โมงเช้า",
+    "reason": "พหูพจน์ไม่เติม s"
+},
+{
+    "question": "The sun _____ in the west.",
+    "options": ["A) set", "B) sets", "C) setted", "D) setting"],
+    "correct": "B",
+    "reading": "เดอะ ซัน เซทส์ อิน เดอะ เวสต์",
+    "translation": "พระอาทิตย์ตกทางทิศตะวันตก",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "They _____ to talk.",
+    "options": ["A) love", "B) loves", "C) loved", "D) loving"],
+    "correct": "A",
+    "reading": "เดย์ เลิฟ ทู ทอล์ค",
+    "translation": "พวกเขาชอบคุยกัน",
+    "reason": "พหูพจน์ไม่เติม s"
+},
+{
+    "question": "She _____ a letter.",
+    "options": ["A) write", "B) writes", "C) writed", "D) writing"],
+    "correct": "B",
+    "reading": "ชี ไรทส์ อะ เลทเทอร์",
+    "translation": "เธอเขียนจดหมาย",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "The engine _____ well.",
+    "options": ["A) work", "B) works", "C) worked", "D) working"],
+    "correct": "B",
+    "reading": "ดิ เอ็นจิน เวิร์คส์ เวลล์",
+    "translation": "เครื่องยนต์ทำงานได้ดี",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "We _____ the game.",
+    "options": ["A) win", "B) wins", "C) wined", "D) winning"],
+    "correct": "A",
+    "reading": "วี วิน เดอะ เกม",
+    "translation": "พวกเราชนะเกมนี้",
+    "reason": "พหูพจน์ไม่เติม s"
+},
+{
+    "question": "She _____ a flower.",
+    "options": ["A) pick", "B) picks", "C) picked", "D) picking"],
+    "correct": "B",
+    "reading": "ชี พิคส์ อะ ฟลาวเวอร์",
+    "translation": "เธอเด็ดดอกไม้",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "He _____ the ball.",
+    "options": ["A) kick", "B) kicks", "C) kicked", "D) kicking"],
+    "correct": "B",
+    "reading": "ฮี คิคส์ เดอะ บอล",
+    "translation": "เขาเตะบอล",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "They _____ the lesson.",
+    "options": ["A) learn", "B) learns", "C) learned", "D) learning"],
+    "correct": "A",
+    "reading": "เดย์ เลิร์น เดอะ เลสเซิน",
+    "translation": "พวกเขาเรียนบทเรียนนี้",
+    "reason": "พหูพจน์ไม่เติม s"
+},
+{
+    "question": "The bird _____ on the tree.",
+    "options": ["A) sit", "B) sits", "C) sitted", "D) sitting"],
+    "correct": "B",
+    "reading": "เดอะ เบิร์ด ซิทส์ ออน เดอะ ทรี",
+    "translation": "นกเกาะอยู่บนต้นไม้",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "He _____ every day.",
+    "options": ["A) jog", "B) jogs", "C) jogged", "D) jogging"],
+    "correct": "B",
+    "reading": "ฮี จ็อกส์ เอวรี เดย์",
+    "translation": "เขาวิ่งเหยาะๆ ทุกวัน",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "They _____ cold water.",
+    "options": ["A) drink", "B) drinks", "C) drinked", "D) drinking"],
+    "correct": "A",
+    "reading": "เดย์ ดริ๊งค์ โคลด์ วอเทอร์",
+    "translation": "พวกเขาดื่มน้ำเย็น",
+    "reason": "พหูพจน์ไม่เติม s"
+},
+{
+    "question": "She _____ a blue dress.",
+    "options": ["A) wear", "B) wears", "C) weared", "D) wearing"],
+    "correct": "B",
+    "reading": "ชี แวร์ส อะ บลู เดรส",
+    "translation": "เธอสวมชุดสีฟ้า",
+    "reason": "เอกพจน์เติม s"
+},
+{
+    "question": "Money _____ important.",
+    "options": ["A) is", "B) are", "C) be", "D) am"],
+    "correct": "A",
+    "reading": "มันนี่ อีส อิมพอร์แทนท์",
+    "translation": "เงินเป็นสิ่งสำคัญ",
+    "reason": "นามนับไม่ได้ใช้ is"
+},
+{
+    "question": "The news _____ bad.",
+    "options": ["A) is", "B) are", "C) be", "D) am"],
+    "correct": "A",
+    "reading": "เดอะ นิวส์ อีส แบด",
+    "translation": "ข่าวนี้แย่มาก",
+    "reason": "news ถือเป็นเอกพจน์"
+},
+{
+    "question": "Mathematics _____ hard.",
+    "options": ["A) is", "B) are", "C) be", "D) am"],
+    "correct": "A",
+    "reading": "แมธเธแมททิคส์ อีส ฮาร์ด",
+    "translation": "คณิตศาสตร์ยาก",
+    "reason": "ชื่อวิชาใช้ is"
+},
+{
+    "question": "The information _____ correct.",
+    "options": ["A) is", "B) are", "C) be", "D) am"],
+    "correct": "A",
+    "reading": "ดิ อินฟอร์เมชัน อีส คอร์เร็คท์",
+    "translation": "ข้อมูลถูกต้อง",
+    "reason": "information นับไม่ได้ใช้ is"
+},
+{
+    "question": "They _____ ready.",
+    "options": ["A) are", "B) is", "C) be", "D) am"],
+    "correct": "A",
+    "reading": "เดย์ อาร์ เรดดี้",
+    "translation": "พวกเขาพร้อมแล้ว",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "I _____ a student.",
+    "options": ["A) am", "B) is", "C) are", "D) be"],
+    "correct": "A",
+    "reading": "ไอ แอม อะ สติวเดนท์",
+    "translation": "ฉันเป็นนักเรียน",
+    "reason": "I ใช้ am"
+},
+{
+    "question": "The car _____ fast.",
+    "options": ["A) is", "B) are", "C) be", "D) am"],
+    "correct": "A",
+    "reading": "เดอะ คาร์ อีส ฟาสท์",
+    "translation": "รถเร็วมาก",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "We _____ friends.",
+    "options": ["A) are", "B) is", "C) be", "D) am"],
+    "correct": "A",
+    "reading": "วี อาร์ เฟรนส์",
+    "translation": "พวกเราเป็นเพื่อนกัน",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "She _____ beautiful.",
+    "options": ["A) is", "B) are", "C) be", "D) am"],
+    "correct": "A",
+    "reading": "ชี อีส บิวตี้ฟูล",
+    "translation": "เธอสวย",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "They _____ happy.",
+    "options": ["A) are", "B) is", "C) be", "D) am"],
+    "correct": "A",
+    "reading": "เดย์ อาร์ แฮปปี้",
+    "translation": "พวกเขามีความสุข",
+    "reason": "พหูพจน์ใช้ are"
+},
+{
+    "question": "He _____ at home.",
+    "options": ["A) is", "B) are", "C) be", "D) am"],
+    "correct": "A",
+    "reading": "ฮี อีส แอท โฮม",
+    "translation": "เขาอยู่ที่บ้าน",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "It _____ a dog.",
+    "options": ["A) is", "B) are", "C) be", "D) am"],
+    "correct": "A",
+    "reading": "อิท อีส อะ ด็อก",
+    "translation": "มันเป็นสุนัข",
+    "reason": "เอกพจน์ใช้ is"
+},
+{
+    "question": "He _____ goes to the gym on Mondays.",
+    "options": ["A) always", "B) allways", "C) alway", "D) allway"],
+    "correct": "A",
+    "reading": "ฮี ออลเวย์ส โกส์ ทู เดอะ ยิม ออน มันเดย์ส",
+    "translation": "เขาไปยิมทุกวันจันทร์เสมอ",
+    "reason": "Always สะกดด้วย l ตัวเดียว"
+},
+{
+    "question": "They _____ eat dinner at 7 PM.",
+    "options": ["A) usualy", "B) usually", "C) useally", "D) usally"],
+    "correct": "B",
+    "reading": "เดย์ ยูชวลลี่ อีท ดินเนอร์ แอท เซเว่น พีเอ็ม",
+    "translation": "พวกเขามักจะกินมื้อเย็นตอน 1 ทุ่ม",
+    "reason": "Usually สะกดแบบนี้ถูกต้อง"
+},
+{
+    "question": "She _____ studies before the exam.",
+    "options": ["A) hard", "B) hardly", "C) hardley", "D) hardes"],
+    "correct": "B",
+    "reading": "ชี ฮาร์ดลี่ สตั๊ดดี้ส์ บีฟอร์ ดิ อิกแซม",
+    "translation": "แทบไม่ได้อ่านหนังสือก่อนสอบเลย",
+    "reason": "Hardly แปลว่า แทบจะไม่"
+},
+{
+    "question": "The train arrived _____ at the station.",
+    "options": ["A) late", "B) lately", "C) latly", "D) lates"],
+    "correct": "A",
+    "reading": "เดอะ เทรน อะไรฟ์ด เลท แอท เดอะ สเตชั่น",
+    "translation": "รถไฟมาถึงสถานีสาย",
+    "reason": "Late เป็นได้ทั้ง adj และ adv ในบริบทนี้"
+},
+{
+    "question": "I have _____ seen him lately.",
+    "options": ["A) late", "B) lately", "C) latly", "D) lates"],
+    "correct": "B",
+    "reading": "ไอ แฮฝ เลทลี่ ซีน ฮิม เลทลี่",
+    "translation": "ฉันเพิ่งเจอเขาเมื่อเร็วๆ นี้เอง",
+    "reason": "Lately แปลว่า เมื่อเร็วๆ นี้"
+},
+{
+    "question": "The children are playing _____ in the garden.",
+    "options": ["A) happy", "B) happily", "C) happyly", "D) happies"],
+    "correct": "B",
+    "reading": "เดอะ ชิลเดรน อาร์ เพลย์อิ้ง แฮปปี้ลี่ อิน เดอะ การ์เด้น",
+    "translation": "เด็กๆ กำลังเล่นอย่างมีความสุขในสวน",
+    "reason": "ต้องการ adverb ขยายคำกริยา play"
+},
+{
+    "question": "He speaks English very _____.",
+    "options": ["A) good", "B) well", "C) wellly", "D) goodly"],
+    "correct": "B",
+    "reading": "ฮี สปีคส์ อิงลิช เฝอรี เวลล์",
+    "translation": "เขาพูดภาษาอังกฤษได้ดีมาก",
+    "reason": "Well เป็น adverb ของ good"
+},
+{
+    "question": "This soup tastes very _____.",
+    "options": ["A) good", "B) well", "C) wellly", "D) goodly"],
+    "correct": "A",
+    "reading": "ดิส ซุป เทสต์ส เฝอรี กู๊ด",
+    "translation": "ซุปนี้รสชาติดีมาก",
+    "reason": "Taste เป็น linking verb ต้องใช้ adjective (good)"
+},
+{
+    "question": "She _____ listens to classical music.",
+    "options": ["A) seldom", "B) seldome", "C) seldomee", "D) seldomly"],
+    "correct": "A",
+    "reading": "ชี เซลดัม ลิสเซินส์ ทู คลาสสิคเคิล มิวสิค",
+    "translation": "เธอนานๆ ครั้งจะฟังดนตรีคลาสสิก",
+    "reason": "Seldom เป็น adv อยู่แล้ว ไม่ต้องเติม ly"
+},
+{
+    "question": "He _____ checks his emails at night.",
+    "options": ["A) often", "B) oftens", "C) oftenly", "D) ofteness"],
+    "correct": "A",
+    "reading": "ฮี ออฟเฟิน เช็คส์ ฮิส อีเมลส์ แอท ไนท์",
+    "translation": "เขามักจะเช็คอีเมลตอนกลางคืนบ่อยๆ",
+    "reason": "Often เป็น adv อยู่แล้ว"
+},
+{
+    "question": "It is _____ cold outside today.",
+    "options": ["A) real", "B) really", "C) reall", "D) reallly"],
+    "correct": "B",
+    "reading": "อิท อีส เรียลลี่ โคลด์ เอาท์ไซด์ ทูเดย์",
+    "translation": "ข้างนอกหนาวจริงๆ วันนี้",
+    "reason": "ใช้ really ขยาย adjective (cold)"
+},
+{
+    "question": "He _____ makes mistakes in his work.",
+    "options": ["A) rare", "B) rarely", "C) rarelly", "D) raring"],
+    "correct": "B",
+    "reading": "ฮี แรร์ลี่ เมคส์ มิสเทคส์ อิน ฮิส เวิร์ค",
+    "translation": "เขาแทบจะไม่ทำพลาดในงานของเขาเลย",
+    "reason": "Rarely แปลว่า ไม่ค่อยจะ"
+},
+{
+    "question": "She _____ finishes her work on time.",
+    "options": ["A) quick", "B) quickly", "C) quicky", "D) quickes"],
+    "correct": "B",
+    "reading": "ชี ควิกลี่ ฟินิชเชส เฮอร์ เวิร์ค ออน ไทม์",
+    "translation": "เธอทำงานเสร็จอย่างรวดเร็วตรงเวลา",
+    "reason": "ขยายกริยา finish"
+},
+{
+    "question": "The music is too _____.",
+    "options": ["A) loud", "B) loudly", "C) loudy", "D) louder"],
+    "correct": "A",
+    "reading": "เดอะ มิวสิค อีส ทู เลาด์",
+    "translation": "เพลงเสียงดังเกินไป",
+    "reason": "ขยาย verb to be ต้องใช้ adjective"
+},
+{
+    "question": "He spoke _____ during the meeting.",
+    "options": ["A) loud", "B) loudly", "C) loudy", "D) loudes"],
+    "correct": "B",
+    "reading": "ฮี สโป๊ค เลาด์ลี่ ดูริ่ง เดอะ มีทติ้ง",
+    "translation": "เขาพูดเสียงดังระหว่างการประชุม",
+    "reason": "ขยาย verb spoke"
+},
+{
+    "question": "She drives her car _____.",
+    "options": ["A) care", "B) careful", "C) carefully", "D) carefull"],
+    "correct": "C",
+    "reading": "ชี ไดรฟ์ส เฮอร์ คาร์ แคร์ฟูลลี่",
+    "translation": "เธอขับรถอย่างระมัดระวัง",
+    "reason": "ขยาย verb drive"
+},
+{
+    "question": "Be _____ when you cross the road.",
+    "options": ["A) care", "B) careful", "C) carefully", "D) carefull"],
+    "correct": "B",
+    "reading": "บี แคร์ฟูล เวน ยู ครอส เดอะ โรด",
+    "translation": "จงระมัดระวังตอนข้ามถนน",
+    "reason": "ใช้หลัง verb to be ต้องเป็น adjective"
+},
+{
+    "question": "They are _____ intelligent students.",
+    "options": ["A) extreme", "B) extremely", "C) extremey", "D) extremly"],
+    "correct": "B",
+    "reading": "เดย์ อาร์ เอ็กซ์ทรีมลี่ อินเทลลิเจนท์ สติวเดนท์ส",
+    "translation": "พวกเขาเป็นนักเรียนที่ฉลาดมากจริงๆ",
+    "reason": "ใช้ extremely ขยาย adjective"
+},
+{
+    "question": "The lesson was _____ easy to understand.",
+    "options": ["A) simple", "B) simply", "C) simpley", "D) simples"],
+    "correct": "B",
+    "reading": "เดอะ เลสเซิน วอส ซิมพลี่ อีซี่ ทู อันเดอร์สแตนด์",
+    "translation": "บทเรียนนั้นเข้าใจง่ายจริงๆ",
+    "reason": "ขยาย adjective easy"
+},
+{
+    "question": "He finished the test _____.",
+    "options": ["A) easy", "B) easily", "C) easies", "D) easyly"],
+    "correct": "B",
+    "reading": "ฮี ฟินิชด์ เดอะ เทสท์ อีซิลี่",
+    "translation": "เขาทำข้อสอบเสร็จอย่างง่ายดาย",
+    "reason": "ขยาย verb finished"
+},
+{
+    "question": "The sun is _____ hot today.",
+    "options": ["A) extreme", "B) extremely", "C) extremey", "D) extremly"],
+    "correct": "B",
+    "reading": "เดอะ ซัน อีส เอ็กซ์ทรีมลี่ ฮอท ทูเดย์",
+    "translation": "แดดร้อนจัดมากวันนี้",
+    "reason": "ขยาย adjective hot"
+},
+{
+    "question": "She sang the song _____.",
+    "options": ["A) beautiful", "B) beautifully", "C) beauty", "D) beautifull"],
+    "correct": "B",
+    "reading": "ชี แซง เดอะ ซอง บิวตี้ฟูลลี่",
+    "translation": "เธอร้องเพลงนั้นอย่างไพเราะ",
+    "reason": "ขยาย verb sang"
+},
+{
+    "question": "This is a _____ flower.",
+    "options": ["A) beautiful", "B) beautifully", "C) beauty", "D) beautifull"],
+    "correct": "A",
+    "reading": "ดิส อีส อะ บิวตี้ฟูล ฟลาวเวอร์",
+    "translation": "นี่คือดอกไม้ที่สวยงาม",
+    "reason": "ขยาย noun flower"
+},
+{
+    "question": "He works _____ every day.",
+    "options": ["A) hard", "B) hardly", "C) hardley", "D) hardes"],
+    "correct": "A",
+    "reading": "ฮี เวิร์คส์ ฮาร์ด เอวรี เดย์",
+    "translation": "เขาทำงานหนักทุกวัน",
+    "reason": "Hard เป็นได้ทั้ง adj และ adv"
+},
+{
+    "question": "The question is _____ difficult.",
+    "options": ["A) extreme", "B) extremely", "C) extremey", "D) extremly"],
+    "correct": "B",
+    "reading": "เดอะ เควสชั่น อีส เอ็กซ์ทรีมลี่ ดิฟฟิคัลท์",
+    "translation": "คำถามนี้ยากมากจริงๆ",
+    "reason": "ขยาย adjective difficult"
+},
+{
+    "question": "They _____ go to the beach.",
+    "options": ["A) sometimes", "B) sometime", "C) sometimess", "D) somtimes"],
+    "correct": "A",
+    "reading": "เดย์ ซัมไทมส์ โก ทู เดอะ บีช",
+    "translation": "บางครั้งพวกเขาก็ไปชายหาด",
+    "reason": "Sometimes ต้องมี s"
+},
+{
+    "question": "We _____ take a taxi to work.",
+    "options": ["A) occasional", "B) occasionally", "C) occasionly", "D) occasion"],
+    "correct": "B",
+    "reading": "วี อะเคเชินนัลลี่ เทค อะ แท็กซี่ ทู เวิร์ค",
+    "translation": "พวกเรานั่งแท็กซี่ไปทำงานเป็นครั้งคราว",
+    "reason": "ใช้ adv เพื่อขยายกริยา take"
+},
+{
+    "question": "He _____ speaks in public.",
+    "options": ["A) never", "B) nevers", "C) neverly", "D) nevery"],
+    "correct": "A",
+    "reading": "ฮี เนเวอร์ สปีคส์ อิน พับลิค",
+    "translation": "เขาไม่เคยพูดในที่สาธารณะเลย",
+    "reason": "Never เป็น adv อยู่แล้ว"
+},
+{
+    "question": "She _____ arrives late for work.",
+    "options": ["A) near", "B) nearly", "C) nearlly", "D) nears"],
+    "correct": "B",
+    "reading": "ชี เนียร์ลี่ อะไรฟ์ส เลท ฟอร์ เวิร์ค",
+    "translation": "เธอเกือบจะมาทำงานสาย",
+    "reason": "Nearly แปลว่า เกือบจะ"
+},
+{
+    "question": "The exam was _____ difficult.",
+    "options": ["A) real", "B) really", "C) reall", "D) reallly"],
+    "correct": "B",
+    "reading": "ดิ อิกแซม วอส เรียลลี่ ดิฟฟิคัลท์",
+    "translation": "ข้อสอบยากจริงๆ",
+    "reason": "ขยาย adjective difficult"
+},
+{
+    "question": "They _____ finished the work.",
+    "options": ["A) quick", "B) quickly", "C) quicky", "D) quickes"],
+    "correct": "B",
+    "reading": "เดย์ ควิกลี่ ฟินิชด์ เดอะ เวิร์ค",
+    "translation": "พวกเขาทำงานเสร็จอย่างรวดเร็ว",
+    "reason": "ขยาย verb finished"
+},
+{
+    "question": "He is a _____ player.",
+    "options": ["A) good", "B) well", "C) wellly", "D) goodly"],
+    "correct": "A",
+    "reading": "ฮี อีส อะ กู๊ด เพลเยอร์",
+    "translation": "เขาเป็นผู้เล่นที่ดี",
+    "reason": "ขยาย noun player"
+},
+{
+    "question": "She sings _____.",
+    "options": ["A) good", "B) well", "C) wellly", "D) goodly"],
+    "correct": "B",
+    "reading": "ชี สิงส์ เวลล์",
+    "translation": "เธอร้องเพลงเพราะ",
+    "reason": "ขยาย verb sings"
+},
+{
+    "question": "The story is _____ funny.",
+    "options": ["A) true", "B) truly", "C) truey", "D) trues"],
+    "correct": "B",
+    "reading": "เดอะ สตอรี่ อีส ทรูลี่ ฟันนี่",
+    "translation": "เรื่องนี้ตลกจริงๆ",
+    "reason": "ขยาย adjective funny"
+},
+{
+    "question": "He _____ understood the lesson.",
+    "options": ["A) clear", "B) clearly", "C) cleary", "D) clears"],
+    "correct": "B",
+    "reading": "ฮี เคลียร์ลี่ อันเดอร์สโต๊ด เดอะ เลสเซิน",
+    "translation": "เขาเข้าใจบทเรียนอย่างชัดเจน",
+    "reason": "ขยาย verb understood"
+},
+{
+    "question": "The instructions were _____.",
+    "options": ["A) clear", "B) clearly", "C) cleary", "D) clears"],
+    "correct": "A",
+    "reading": "ดิ อินสตรัคชั่นส์ เวิร์ค เคลียร์",
+    "translation": "คำแนะนำชัดเจนดี",
+    "reason": "หลัง verb to be ใช้ adjective"
+},
+{
+    "question": "She _____ cleans her room.",
+    "options": ["A) slow", "B) slowly", "C) slowy", "D) slows"],
+    "correct": "B",
+    "reading": "ชี สโลว์ลี่ คลีนส์ เฮอร์ รูม",
+    "translation": "เธอค่อยๆ ทำความสะอาดห้องของเธอ",
+    "reason": "ขยาย verb cleans"
+},
+{
+    "question": "He is a _____ walker.",
+    "options": ["A) slow", "B) slowly", "C) slowy", "D) slows"],
+    "correct": "A",
+    "reading": "ฮี อีส อะ สโลว์ วอล์คเกอร์",
+    "translation": "เขาเป็นคนเดินช้า",
+    "reason": "ขยาย noun walker"
+},
+{
+    "question": "The dog barked _____.",
+    "options": ["A) loud", "B) loudly", "C) loudy", "D) loudes"],
+    "correct": "B",
+    "reading": "เดอะ ด็อก บาร์คด์ เลาด์ลี่",
+    "translation": "สุนัขเห่าเสียงดัง",
+    "reason": "ขยาย verb barked"
+},
+{
+    "question": "He speaks _____.",
+    "options": ["A) soft", "B) softly", "C) softy", "D) softes"],
+    "correct": "B",
+    "reading": "ฮี สปีคส์ ซอฟท์ลี่",
+    "translation": "เขาพูดเบาๆ",
+    "reason": "ขยาย verb speaks"
+},
+{
+    "question": "The music sounds _____.",
+    "options": ["A) soft", "B) softly", "C) softy", "D) softes"],
+    "correct": "A",
+    "reading": "เดอะ มิวสิค เซาวนด์ส ซอฟท์",
+    "translation": "ดนตรีฟังดูนุ่มนวล",
+    "reason": "หลัง linking verb ใช้ adjective"
+},
+{
+    "question": "She writes _____.",
+    "options": ["A) neat", "B) neatly", "C) neaty", "D) neates"],
+    "correct": "B",
+    "reading": "ชี ไรทส์ นีทลี่",
+    "translation": "เธอเขียนหนังสือเป็นระเบียบ",
+    "reason": "ขยาย verb writes"
+},
+{
+    "question": "Her handwriting is _____.",
+    "options": ["A) neat", "B) neatly", "C) neaty", "D) neates"],
+    "correct": "A",
+    "reading": "เฮอร์ แฮนด์ไรทติ้ง อีส นีท",
+    "translation": "ลายมือของเธอเป็นระเบียบ",
+    "reason": "หลัง verb to be ใช้ adjective"
+},
+{
+    "question": "He worked _____ to finish on time.",
+    "options": ["A) quick", "B) quickly", "C) quicky", "D) quickes"],
+    "correct": "B",
+    "reading": "ฮี เวิร์คด์ ควิกลี่ ทู ฟินิช ออน ไทม์",
+    "translation": "เขาทำงานอย่างรวดเร็วเพื่อให้เสร็จทันเวลา",
+    "reason": "ขยาย verb worked"
+},
+{
+    "question": "The task was _____.",
+    "options": ["A) quick", "B) quickly", "C) quicky", "D) quickes"],
+    "correct": "A",
+    "reading": "เดอะ ทาสก์ วอส ควิก",
+    "translation": "งานนั้นรวดเร็ว",
+    "reason": "หลัง verb to be ใช้ adjective"
+},
+{
+    "question": "He answered _____.",
+    "options": ["A) wise", "B) wisely", "C) wisey", "D) wises"],
+    "correct": "B",
+    "reading": "ฮี แอนเซอร์ด ไวซ์ลี่",
+    "translation": "เขาตอบอย่างชาญฉลาด",
+    "reason": "ขยาย verb answered"
+},
+{
+    "question": "His answer was _____.",
+    "options": ["A) wise", "B) wisely", "C) wisey", "D) wises"],
+    "correct": "A",
+    "reading": "ฮิส แอนเซอร์ วอส ไวซ์",
+    "translation": "คำตอบของเขาฉลาดมาก",
+    "reason": "หลัง verb to be ใช้ adjective"
+},
+{
+    "question": "They dance _____.",
+    "options": ["A) graceful", "B) gracefully", "C) gracey", "D) grace"],
+    "correct": "B",
+    "reading": "เดย์ แดนซ์ เกรซฟูลลี่",
+    "translation": "พวกเขาเต้นรำอย่างงดงาม",
+    "reason": "ขยาย verb dance"
+},
+{
+    "question": "Their dance was _____.",
+    "options": ["A) graceful", "B) gracefully", "C) gracey", "D) grace"],
+    "correct": "A",
+    "reading": "แดร์ แดนซ์ วอส เกรซฟูล",
+    "translation": "การเต้นรำของพวกเขางดงามมาก",
+    "reason": "หลัง verb to be ใช้ adjective"
+},
+{
+    "question": "He runs _____.",
+    "options": ["A) fast", "B) fastly", "C) fasts", "D) fastes"],
+    "correct": "A",
+    "reading": "ฮี รันส์ ฟาสท์",
+    "translation": "เขาวิ่งเร็ว",
+    "reason": "Fast เป็น adverb โดยไม่ต้องเติม ly"
+}
+    ], 
+    hard: [
+        {
+    "question": "It is essential that every student _____ their assignment on time.",
+    "options": ["A) submit", "B) submits", "C) submitting", "D) to submit"],
+    "correct": "A",
+    "reading": "อิท อีส อิสเซนเชียล แดท เอวรี สติวเดนท์ ซับมิท แดร์ แอสไซน์เม้นท์ ออน ไทม์",
+    "translation": "มันจำเป็นที่นักเรียนทุกคนจะต้องส่งงานตรงเวลา",
+    "reason": "Subjunctive mood: หลัง 'essential that' กริยาต้องเป็นรูป base form"
+},
+{
+    "question": "Never _____ such a beautiful sunset before.",
+    "options": ["A) I have seen", "B) have I seen", "C) I seen", "D) have I see"],
+    "correct": "B",
+    "reading": "เนเวอร์ แฮฝ ไอ ซีน ซัช อะ บิวตี้ฟูล ซันเซ็ต บีฟอร์",
+    "translation": "ฉันไม่เคยเห็นพระอาทิตย์ตกที่สวยงามขนาดนี้มาก่อนเลย",
+    "reason": "Inversion: ประโยคขึ้นต้นด้วย Negative adverb ต้องสลับประธานกับกริยา"
+},
+{
+    "question": "The book, _____ by a famous author, was a bestseller.",
+    "options": ["A) writing", "B) written", "C) wrote", "D) was written"],
+    "correct": "B",
+    "reading": "เดอะ บุ๊ค, ริทเทิน บาย อะ เฟมัส ออเธอร์, วอส อะ เบสท์เซลเลอร์",
+    "translation": "หนังสือเล่มนั้นซึ่งเขียนโดยนักเขียนชื่อดัง เป็นหนังสือขายดี",
+    "reason": "Reduced Relative Clause: หนังสือ 'ถูกเขียน' จึงต้องเป็น V.3"
+},
+{
+    "question": "Not only _____ the exam, but he also got the highest score.",
+    "options": ["A) did he pass", "B) he passed", "C) he did pass", "D) pass he did"],
+    "correct": "A",
+    "reading": "นอท โอนลี่ ดิด ฮี พาส ดิ อิกแซม, บัท ฮี ออลโซ กอท เดอะ ไฮเอสท์ สกอร์",
+    "translation": "เขาไม่ได้แค่สอบผ่านเท่านั้น แต่เขายังได้คะแนนสูงสุดอีกด้วย",
+    "reason": "Inversion: หลัง 'Not only...' ต้องสลับเป็นรูปคำถาม"
+},
+{
+    "question": "The committee _____ divided on the issue.",
+    "options": ["A) is", "B) are", "C) has", "D) be"],
+    "correct": "B",
+    "reading": "เดอะ คอมมิตตี้ อาร์ ดิไวด์ด ออน ดิ อิดชู",
+    "translation": "คณะกรรมการมีความเห็นแตกแยกกันในประเด็นนี้",
+    "reason": "Collective noun ถ้าสมาชิกมีความเห็นต่างกัน ให้ใช้พหูพจน์ (are)"
+},
+{
+    "question": "I suggest that he _____ home immediately.",
+    "options": ["A) go", "B) goes", "C) going", "D) to go"],
+    "correct": "A",
+    "reading": "ไอ ซัดเจสท์ แดท ฮี โก โฮม อิมมีเดียทลี่",
+    "translation": "ฉันแนะนำให้เขากลับบ้านทันที",
+    "reason": "Subjunctive mood: หลัง suggest that ใช้ base form"
+},
+{
+    "question": "Rarely _____ so much effort into a project.",
+    "options": ["A) have they put", "B) they have put", "C) they put", "D) have they putting"],
+    "correct": "A",
+    "reading": "แรร์ลี่ แฮฝ เดย์ พุท โซ มัช เอฟเฟิร์ท อินทู อะ โปรเจ็คท์",
+    "translation": "ไม่ค่อยมีบ่อยนักที่พวกเขาจะทุ่มเทให้กับโครงการมากขนาดนี้",
+    "reason": "Inversion: หลัง Rarely ต้องสลับประธานและกริยา"
+},
+{
+    "question": "The man _____ at the desk is my uncle.",
+    "options": ["A) sit", "B) sitting", "C) sat", "D) sits"],
+    "correct": "B",
+    "reading": "เดอะ แมน ซิททิ่ง แอท เดอะ เดสค์ อีส มาย อังเคิล",
+    "translation": "ผู้ชายที่นั่งอยู่ที่โต๊ะคือลุงของฉัน",
+    "reason": "Reduced Relative Clause: ผู้ชาย 'ที่กำลังนั่ง' ใช้ V.ing"
+},
+{
+    "question": "Either the manager or the employees _____ responsible for this.",
+    "options": ["A) is", "B) are", "C) was", "D) has been"],
+    "correct": "B",
+    "reading": "อีเธอร์ เดอะ เมเนเจอร์ ออร์ ดิ เอ็มพลอยอี้ส อาร์ เรสปอนซิเบิล ฟอร์ ดิส",
+    "translation": "ไม่ว่าผู้จัดการหรือพนักงานก็ต้องรับผิดชอบต่อเรื่องนี้",
+    "reason": "Neither/Either + or: กริยาตามประธานตัวใกล้ (employees เป็นพหูพจน์)"
+},
+{
+    "question": "It is important that she _____ the truth.",
+    "options": ["A) know", "B) knows", "C) knowing", "D) to know"],
+    "correct": "A",
+    "reading": "อิท อีส อิมพอร์แทนท์ แดท ชี โน เดอะ ทรูธ",
+    "translation": "มันสำคัญที่เธอจะต้องรู้ความจริง",
+    "reason": "Subjunctive mood: กริยาเป็น base form"
+},
+{
+    "question": "Little _____ that his life was in danger.",
+    "options": ["A) he knew", "B) did he know", "C) he did know", "D) know he did"],
+    "correct": "B",
+    "reading": "ลิทเทิล ดิด ฮี โน แดท ฮิส ไลฟ์ วอส อิน เดนเจอร์",
+    "translation": "เขาแทบไม่รู้เลยว่าชีวิตเขากำลังตกอยู่ในอันตราย",
+    "reason": "Inversion: Little ขึ้นต้นประโยค ต้องสลับประธานและกริยา"
+},
+{
+    "question": "The students _____ during the exam were punished.",
+    "options": ["A) talk", "B) talking", "C) talked", "D) to talk"],
+    "correct": "B",
+    "reading": "เดอะ สติวเดนท์ส ทอคกิ้ง ดูริ่ง ดิ อิกแซม เวิร์ค พั๊นนช์ด",
+    "translation": "นักเรียนที่คุยกันระหว่างสอบถูกลงโทษ",
+    "reason": "Reduced Relative Clause: นักเรียน 'ที่กำลังคุย' ใช้ V.ing"
+},
+{
+    "question": "Not until I saw him _____ I realize the truth.",
+    "options": ["A) did", "B) do", "C) had", "D) will"],
+    "correct": "A",
+    "reading": "นอท อันทิล ไอ ซอ ฮิม ดิด ไอ เรียลไลซ์ เดอะ ทรูธ",
+    "translation": "จนกระทั่งฉันเจอเขา ฉันถึงได้ตระหนักถึงความจริง",
+    "reason": "Inversion: หลัง Not until... ต้องเป็นประโยคคำถาม"
+},
+{
+    "question": "The proposal _____ by the boss was rejected.",
+    "options": ["A) make", "B) making", "C) made", "D) was made"],
+    "correct": "C",
+    "reading": "เดอะ โพรโพซัล เมด บาย เดอะ บอส วอส รีเจ็คท์ด",
+    "translation": "ข้อเสนอที่ถูกสร้างโดยเจ้านายถูกปฏิเสธ",
+    "reason": "Reduced Relative Clause: ข้อเสนอ 'ถูกสร้าง' ต้องเป็น V.3"
+},
+{
+    "question": "The news that he _____ fired was a surprise.",
+    "options": ["A) be", "B) was", "C) were", "D) been"],
+    "correct": "B",
+    "reading": "เดอะ นิวส์ แดท ฮี วอส ไฟร์ด วอส อะ เซอร์ไพรส์",
+    "translation": "ข่าวที่ว่าเขาถูกไล่ออกเป็นเรื่องที่น่าประหลาดใจ",
+    "reason": "เป็นเหตุการณ์ในอดีต"
+},
+{
+    "question": "Were I you, I _____ that job.",
+    "options": ["A) would take", "B) will take", "C) take", "D) would have took"],
+    "correct": "A",
+    "reading": "เวอร์ ไอ ยู, ไอ วู้ด เทค แดท จ็อบ",
+    "translation": "ถ้าฉันเป็นคุณ ฉันจะรับงานนั้น",
+    "reason": "Inversion ของ Conditional Type 2 (Were I = If I were)"
+},
+{
+    "question": "The team _____ celebrating their victory.",
+    "options": ["A) is", "B) are", "C) was", "D) has"],
+    "correct": "B",
+    "reading": "เดอะ ทีม อาร์ เซเลเบรทติ้ง แดร์ วิคทอรี่",
+    "translation": "ทีมกำลังฉลองชัยชนะของพวกเขา",
+    "reason": "เน้นสมาชิกในทีม (พหูพจน์)"
+},
+{
+    "question": "She insisted that he _____ the gift.",
+    "options": ["A) accept", "B) accepts", "C) accepted", "D) to accept"],
+    "correct": "A",
+    "reading": "ชี อินซิสท์ด แดท ฮี แอคเซพท์ เดอะ กิฟท์",
+    "translation": "เธอยืนกรานให้เขารับของขวัญ",
+    "reason": "Subjunctive mood: หลัง insist that ใช้ base form"
+},
+{
+    "question": "Only then _____ realize the mistake.",
+    "options": ["A) did I", "B) I did", "C) I do", "D) had I"],
+    "correct": "A",
+    "reading": "โอนลี่ เด็น ดิด ไอ เรียลไลซ์ เดอะ มิสเทค",
+    "translation": "ถึงตอนนั้นฉันถึงได้ตระหนักถึงความผิดพลาด",
+    "reason": "Inversion: Only then ขึ้นต้นประโยค ต้องสลับตำแหน่ง"
+},
+{
+    "question": "The vase, _____ in China, is very expensive.",
+    "options": ["A) make", "B) making", "C) made", "D) was made"],
+    "correct": "C",
+    "reading": "เดอะ เฝส, เมด อิน ไชน่า, อีส เฝอรี อิกซ์เพนซีฟ",
+    "translation": "แจกันที่ถูกผลิตในจีนมีราคาแพงมาก",
+    "reason": "Reduced Relative Clause: แจกัน 'ถูกผลิต' ต้องเป็น V.3"
+},
+{
+    "question": "It is required that every member _____ present.",
+    "options": ["A) be", "B) is", "C) are", "D) were"],
+    "correct": "A",
+    "reading": "อิท อีส รีไควร์ด แดท เอวรี เมมเบอร์ บี เพรเซินท์",
+    "translation": "มันเป็นข้อกำหนดที่สมาชิกทุกคนต้องมา",
+    "reason": "Subjunctive mood: หลัง require that ใช้ be (base form)"
+},
+{
+    "question": "Had I known, I _____ told you.",
+    "options": ["A) would have", "B) will have", "C) would", "D) had"],
+    "correct": "A",
+    "reading": "แฮด ไอ โนน, ไอ วู้ด แฮฝ โทลด์ ยู",
+    "translation": "ถ้าฉันรู้ ฉันคงบอกคุณไปแล้ว",
+    "reason": "Inversion ของ Conditional Type 3 (Had I = If I had)"
+},
+{
+    "question": "The apples _____ on the ground were rotten.",
+    "options": ["A) lie", "B) lying", "C) lay", "D) lain"],
+    "correct": "B",
+    "reading": "ดิ แอพเพิลส์ ไลอิ้ง ออน เดอะ กราวด์ เวิร์ค ร็อทเทิน",
+    "translation": "แอปเปิลที่วางกองอยู่บนพื้นมันเน่า",
+    "reason": "Reduced Relative Clause: แอปเปิล 'ที่กำลังวาง' ใช้ V.ing"
+},
+{
+    "question": "Under no circumstances _____ the door.",
+    "options": ["A) you should open", "B) should you open", "C) you open", "D) open should you"],
+    "correct": "B",
+    "reading": "อันเดอร์ โน เซอร์คัมสแตนซ์ส ชู้ด ยู โอเพิน เดอะ ดอร์",
+    "translation": "ห้ามเปิดประตูไม่ว่าในกรณีใดๆ ทั้งสิ้น",
+    "reason": "Inversion: หลังวลีเชิงปฏิเสธ ต้องสลับกริยาช่วยขึ้นหน้า"
+},
+{
+    "question": "The cake, _____ by my mother, was delicious.",
+    "options": ["A) bake", "B) baking", "C) baked", "D) is baked"],
+    "correct": "C",
+    "reading": "เดอะ เค้ก, เบคด์ บาย มาย มาเธอร์, วอส ดิลิเชียส",
+    "translation": "เค้กที่อบโดยแม่ของฉันมันอร่อยมาก",
+    "reason": "Reduced Relative Clause: เค้ก 'ถูกอบ' ใช้ V.3"
+},
+{
+    "question": "I demand that he _____ immediately.",
+    "options": ["A) apologize", "B) apologizes", "C) apologized", "D) to apologize"],
+    "correct": "A",
+    "reading": "ไอ ดีแมนด์ แดท ฮี อะพอลโลจายซ์ อิมมีเดียทลี่",
+    "translation": "ฉันต้องการให้เขาขอโทษเดี๋ยวนี้",
+    "reason": "Subjunctive mood: หลัง demand that ใช้ base form"
+},
+{
+    "question": "Should you need help, _____ me.",
+    "options": ["A) you call", "B) call", "C) calling", "D) to call"],
+    "correct": "B",
+    "reading": "ชู้ด ยู นีด เฮลป์, คอล มี",
+    "translation": "ถ้าคุณต้องการความช่วยเหลือ เรียกฉันนะ",
+    "reason": "Inversion: Should you = If you should"
+},
+{
+    "question": "The boy _____ by the dog was scared.",
+    "options": ["A) chase", "B) chasing", "C) chased", "D) was chased"],
+    "correct": "C",
+    "reading": "เดอะ บอย เชสท์ บาย เดอะ ด็อก วอส สแครด์",
+    "translation": "เด็กชายที่ถูกสุนัขไล่ล่ารู้สึกกลัว",
+    "reason": "Reduced Relative Clause: เด็กชาย 'ถูกไล่ล่า' ใช้ V.3"
+},
+{
+    "question": "Not once _____ he complain about the work.",
+    "options": ["A) did", "B) does", "C) had", "D) has"],
+    "correct": "A",
+    "reading": "นอท วันซ์ ดิด ฮี คอมเพลน อะเบ้าท์ เดอะ เวิร์ค",
+    "translation": "เขาไม่เคยบ่นเรื่องงานเลยแม้แต่ครั้งเดียว",
+    "reason": "Inversion: หลัง Not once ต้องสลับตำแหน่งประธาน-กริยา"
+},
+{
+    "question": "The paintings, _____ in the gallery, are for sale.",
+    "options": ["A) exhibit", "B) exhibiting", "C) exhibited", "D) were exhibited"],
+    "correct": "C",
+    "reading": "เดอะ เพนทติ้งส์, เอ็กซ์ฮิบิทด์ อิน เดอะ แกลเลอรี่, อาร์ ฟอร์ เซลล์",
+    "translation": "ภาพวาดที่ถูกจัดแสดงในแกลเลอรีมีไว้จำหน่าย",
+    "reason": "Reduced Relative Clause: ภาพวาด 'ถูกจัดแสดง' ใช้ V.3"
+},
+{
+    "question": "It is crucial that everyone _____ informed.",
+    "options": ["A) be", "B) is", "C) are", "D) were"],
+    "correct": "A",
+    "reading": "อิท อีส ครูเชียล แดท เอวรีวัน บี อินฟอร์มด์",
+    "translation": "มันสำคัญมากที่ทุกคนจะต้องได้รับแจ้งข่าว",
+    "reason": "Subjunctive mood: หลัง crucial that ใช้ base form"
+},
+{
+    "question": "Were they to know, they _____ surprised.",
+    "options": ["A) would be", "B) will be", "C) are", "D) have been"],
+    "correct": "A",
+    "reading": "เวอร์ เดย์ ทู โน, เดย์ วู้ด บี เซอร์ไพรส์ด์",
+    "translation": "หากพวกเขาได้รู้ พวกเขาคงจะประหลาดใจ",
+    "reason": "Inversion: Were they to = If they were to"
+},
+{
+    "question": "The girl _____ the piano is my sister.",
+    "options": ["A) play", "B) playing", "C) played", "D) is playing"],
+    "correct": "B",
+    "reading": "เดอะ เกิร์ล เพลย์อิ้ง เดอะ เปียโน อีส มาย ซิสเทอร์",
+    "translation": "เด็กหญิงที่กำลังเล่นเปียโนคือพี่สาวฉัน",
+    "reason": "Reduced Relative Clause: เด็กหญิง 'ที่กำลังเล่น' ใช้ V.ing"
+},
+{
+    "question": "Hardly _____ finished dinner when the phone rang.",
+    "options": ["A) had I", "B) I had", "C) did I", "D) have I"],
+    "correct": "A",
+    "reading": "ฮาร์ดลี่ แฮด ไอ ฟินิชด์ ดินเนอร์ เวน เดอะ โฟน แร็ง",
+    "translation": "ฉันเพิ่งจะกินข้าวเสร็จได้ไม่นานโทรศัพท์ก็ดัง",
+    "reason": "Inversion: หลัง Hardly ต้องสลับตำแหน่ง"
+},
+{
+    "question": "The letter _____ yesterday arrived today.",
+    "options": ["A) post", "B) posting", "C) posted", "D) was posted"],
+    "correct": "C",
+    "reading": "เดอะ เลทเทอร์ โพสต์ด เยสเตอร์เดย์ อะไรฟ์ด ทูเดย์",
+    "translation": "จดหมายที่ถูกส่งเมื่อวานมาถึงวันนี้",
+    "reason": "Reduced Relative Clause: จดหมาย 'ถูกส่ง' ใช้ V.3"
+},
+{
+    "question": "She recommended that he _____ more.",
+    "options": ["A) study", "B) studies", "C) studied", "D) to study"],
+    "correct": "A",
+    "reading": "ชี เรคคอมเมนด์ด แดท ฮี สตั๊ดดี้ มอร์",
+    "translation": "เธอแนะนำให้เขาเรียนมากขึ้น",
+    "reason": "Subjunctive mood: หลัง recommend that ใช้ base form"
+},
+{
+    "question": "Were it to rain, we _____ the game.",
+    "options": ["A) would cancel", "B) will cancel", "C) cancel", "D) cancelled"],
+    "correct": "A",
+    "reading": "เวอร์ อิท ทู เรน, วี วู้ด แคนเซิล เดอะ เกม",
+    "translation": "ถ้าฝนตก เราคงต้องยกเลิกเกมนี้",
+    "reason": "Inversion ของ Conditional"
+},
+{
+    "question": "The house _____ in 1990 is very sturdy.",
+    "options": ["A) build", "B) building", "C) built", "D) was built"],
+    "correct": "C",
+    "reading": "เดอะ เฮ้าส์ บิลท์ อิน ไนน์ทีนไนน์ตี้ อีส เฝอรี สเตอร์ดี้",
+    "translation": "บ้านที่ถูกสร้างในปี 1990 มีความแข็งแรงมาก",
+    "reason": "Reduced Relative Clause: บ้าน 'ถูกสร้าง' ใช้ V.3"
+},
+{
+    "question": "Only in this way _____ solve the problem.",
+    "options": ["A) can we", "B) we can", "C) we could", "D) could we"],
+    "correct": "A",
+    "reading": "โอนลี่ อิน ดิส เวย์ แคน วี ซอลว์ เดอะ พรอเบลม",
+    "translation": "ด้วยวิธีนี้เท่านั้นที่เราจะแก้ปัญหาได้",
+    "reason": "Inversion: ขึ้นต้นด้วย Only in... ต้องสลับตำแหน่ง"
+},
+{
+    "question": "The flowers _____ in the vase are fresh.",
+    "options": ["A) put", "B) putting", "C) putted", "D) are put"],
+    "correct": "A",
+    "reading": "เดอะ ฟลาวเวอร์ส พุท อิน เดอะ เฝส อาร์ เฟรช",
+    "translation": "ดอกไม้ที่ถูกใส่ไว้ในแจกันยังสดอยู่",
+    "reason": "Reduced Relative Clause: ดอกไม้ 'ถูกใส่' ใช้ V.3"
+},
+{
+    "question": "It is necessary that everyone _____ here.",
+    "options": ["A) be", "B) is", "C) are", "D) were"],
+    "correct": "A",
+    "reading": "อิท อีส เนเซสซารี่ แดท เอวรีวัน บี เฮียร์",
+    "translation": "มันจำเป็นที่ทุกคนจะต้องอยู่ที่นี่",
+    "reason": "Subjunctive mood: หลัง necessary that ใช้ base form"
+},
+{
+    "question": "Had they arrived earlier, they _____ met him.",
+    "options": ["A) would have", "B) will have", "C) would", "D) had"],
+    "correct": "A",
+    "reading": "แฮด เดย์ อะไรฟ์ด เออร์เลียร์, เดย์ วู้ด แฮฝ เม็ท ฮิม",
+    "translation": "ถ้าพวกเขามาถึงเร็วกว่านี้ พวกเขาคงได้เจอเขา",
+    "reason": "Inversion ของ Conditional Type 3"
+},
+{
+    "question": "The car _____ by the mechanic is ready.",
+    "options": ["A) repair", "B) repairing", "C) repaired", "D) was repaired"],
+    "correct": "C",
+    "reading": "เดอะ คาร์ รีแพร์ด บาย เดอะ เมคคานิค อีส เรดดี้",
+    "translation": "รถที่ถูกซ่อมโดยช่างเรียบร้อยแล้ว",
+    "reason": "Reduced Relative Clause: รถ 'ถูกซ่อม' ใช้ V.3"
+},
+{
+    "question": "Never _____ such a mistake again.",
+    "options": ["A) will I make", "B) I will make", "C) I make", "D) made I"],
+    "correct": "A",
+    "reading": "เนเวอร์ วิลล์ ไอ เมค ซัช อะ มิสเทค อะเกน",
+    "translation": "ฉันจะไม่มีวันทำพลาดแบบนี้อีกเด็ดขาด",
+    "reason": "Inversion: Never ขึ้นต้นประโยค ต้องสลับตำแหน่ง"
+},
+{
+    "question": "The cake _____ on the table is mine.",
+    "options": ["A) sit", "B) sitting", "C) sat", "D) was sitting"],
+    "correct": "B",
+    "reading": "เดอะ เค้ก ซิททิ่ง ออน เดอะ เทเบิล อีส มายน์",
+    "translation": "เค้กที่วางอยู่บนโต๊ะเป็นของฉัน",
+    "reason": "Reduced Relative Clause: เค้ก 'ที่กำลังวาง' ใช้ V.ing"
+},
+{
+    "question": "I suggest that she _____ to the doctor.",
+    "options": ["A) go", "B) goes", "C) went", "D) to go"],
+    "correct": "A",
+    "reading": "ไอ ซัดเจสท์ แดท ชี โก ทู เดอะ ด็อกเตอร์",
+    "translation": "ฉันแนะนำให้เธอไปหาหมอ",
+    "reason": "Subjunctive mood"
+},
+{
+    "question": "Were it not for you, I _____ failed.",
+    "options": ["A) would have", "B) will have", "C) would", "D) had"],
+    "correct": "A",
+    "reading": "เวอร์ อิท นอท ฟอร์ ยู, ไอ วู้ด แฮฝ เฟลด์",
+    "translation": "ถ้าไม่ใช่เพราะคุณ ฉันคงล้มเหลวไปแล้ว",
+    "reason": "Inversion ของ Conditional"
+},
+{
+    "question": "The books _____ in the library are old.",
+    "options": ["A) keep", "B) keeping", "C) kept", "D) are kept"],
+    "correct": "C",
+    "reading": "เดอะ บุ๊คส์ เคพท์ อิน เดอะ ไลบรารี่ อาร์ โอลด์",
+    "translation": "หนังสือที่ถูกเก็บไว้ในห้องสมุดมันเก่าแล้ว",
+    "reason": "Reduced Relative Clause: หนังสือ 'ถูกเก็บ' ใช้ V.3"
+},
+{
+    "question": "Rarely _____ seen him so angry.",
+    "options": ["A) have I", "B) I have", "C) I do", "D) had I"],
+    "correct": "A",
+    "reading": "แรร์ลี่ แฮฝ ไอ ซีน ฮิม โซ แองกรี้",
+    "translation": "นานๆ ทีฉันจะเห็นเขาโกรธขนาดนี้",
+    "reason": "Inversion"
+},
+{
+    "question": "The decision, _____ by the board, is final.",
+    "options": ["A) make", "B) making", "C) made", "D) was made"],
+    "correct": "C",
+    "reading": "เดอะ ดิซิชั่น, เมด บาย เดอะ บอร์ด, อีส ไฟนัล",
+    "translation": "การตัดสินใจที่ถูกทำโดยคณะกรรมการถือเป็นที่สิ้นสุด",
+    "reason": "Reduced Relative Clause: การตัดสินใจ 'ถูกทำ' ใช้ V.3"
+},
+{
+    "question": "He needs to _____ the habit of biting his nails.",
+    "options": ["A) break", "B) broken", "C) broke", "D) breaking"],
+    "correct": "A",
+    "reading": "ฮี นีดส์ ทู เบรค เดอะ แฮบิท ออฟ ไบท์ทิ่ง ฮิส เนลส์",
+    "translation": "เขาจำเป็นต้องเลิกนิสัยกัดเล็บ",
+    "reason": "Break the habit เป็นสำนวนมาตรฐาน"
+},
+{
+    "question": "The company decided to _____ the new project due to budget cuts.",
+    "options": ["A) call off", "B) call up", "C) call in", "D) call at"],
+    "correct": "A",
+    "reading": "เดอะ คัมพานี ดีไซด์ด ทู คอล ออฟ เดอะ นิว โปรเจ็คท์ ดู ทู บัดเจ็ท คัทส์",
+    "translation": "บริษัทตัดสินใจยกเลิกโครงการใหม่เนื่องจากการตัดงบประมาณ",
+    "reason": "Call off แปลว่า ยกเลิก"
+},
+{
+    "question": "She _____ a lot of pressure at work lately.",
+    "options": ["A) has been under", "B) is under", "C) under", "D) has under"],
+    "correct": "A",
+    "reading": "ชี แฮซ บีน อันเดอร์ อะ ล็อท ออฟ เพรสเชอร์ แอท เวิร์ค เลทลี่",
+    "translation": "เธอต้องเผชิญกับความกดดันอย่างมากในการทำงานเมื่อเร็วๆ นี้",
+    "reason": "Be under pressure แปลว่า อยู่ภายใต้ความกดดัน"
+},
+{
+    "question": "If you _____ earlier, you would have caught the train.",
+    "options": ["A) had left", "B) have left", "C) left", "D) would leave"],
+    "correct": "A",
+    "reading": "อิฟ ยู แฮด เลฟท์ เออร์เลียร์, ยู วู้ด แฮฝ คอท เดอะ เทรน",
+    "translation": "ถ้าคุณออกเดินทางเร็วกว่านี้ คุณคงทันรถไฟแล้ว",
+    "reason": "Conditional Type 3: If + Past Perfect, Subject + would have + V.3"
+},
+{
+    "question": "The meeting was _____ until next week.",
+    "options": ["A) put off", "B) put on", "C) put out", "D) put away"],
+    "correct": "A",
+    "reading": "เดอะ มีทติ้ง วอส พุท ออฟ อันทิล เน็กซ์ท วีค",
+    "translation": "การประชุมถูกเลื่อนออกไปจนถึงสัปดาห์หน้า",
+    "reason": "Put off แปลว่า เลื่อนออกไป"
+},
+{
+    "question": "I don't _____ with his opinion on this matter.",
+    "options": ["A) see eye to eye", "B) look face to face", "C) talk ear to ear", "D) walk hand in hand"],
+    "correct": "A",
+    "reading": "ไอ โด๊นท์ ซี อาย ทู อาย วิธ ฮิส อะพินเนียน ออน ดิส แมทเทอร์",
+    "translation": "ฉันไม่เห็นด้วยกับความเห็นของเขาในเรื่องนี้",
+    "reason": "See eye to eye เป็นสำนวนแปลว่า เห็นด้วย"
+},
+{
+    "question": "She is _____ to win the championship.",
+    "options": ["A) likely", "B) like", "C) likes", "D) liking"],
+    "correct": "A",
+    "reading": "ชี อีส ไลค์ลี่ ทู วิน เดอะ แชมเปี้ยนชิพ",
+    "translation": "เธอมีแนวโน้มที่จะชนะการแข่งขันชิงแชมป์",
+    "reason": "Be likely to ตามด้วย V.inf"
+},
+{
+    "question": "We should _____ our resources wisely.",
+    "options": ["A) make use of", "B) make use", "C) use making of", "D) using of"],
+    "correct": "A",
+    "reading": "วี ชู้ด เมค ยูส ออฟ เอาเวอร์ รีซอร์สเซส ไวซ์ลี่",
+    "translation": "เราควรใช้ทรัพยากรของเราอย่างชาญฉลาด",
+    "reason": "Make use of เป็น collocation"
+},
+{
+    "question": "He has a _____ personality that attracts people.",
+    "options": ["A) magnetic", "B) magnet", "C) magnetical", "D) magnetism"],
+    "correct": "A",
+    "reading": "ฮี แฮซ อะ แมกเนททิค เพอร์ซันแนลลิตี้ แดท แอทแทร็คท์ส พีเพิล",
+    "translation": "เขามีบุคลิกที่มีเสน่ห์ดึงดูดผู้คน",
+    "reason": "Magnetic personality ใช้เป็นคำคุณศัพท์"
+},
+{
+    "question": "Despite _____, she remained calm.",
+    "options": ["A) the danger", "B) dangerous", "C) dangerly", "D) in danger"],
+    "correct": "A",
+    "reading": "ดิสพายท์ เดอะ เดนเจอร์, ชี รีเมนด์ คาล์ม",
+    "translation": "แม้จะตกอยู่ในอันตราย เธอก็ยังคงใจเย็น",
+    "reason": "Despite ต้องตามด้วยคำนาม"
+},
+{
+    "question": "I am _____ to hearing from you.",
+    "options": ["A) looking forward", "B) look forward", "C) looked forward", "D) looks forward"],
+    "correct": "A",
+    "reading": "ไอ แอม ลุคกิ้ง ฟอร์เวิร์ด ทู เฮียรริ่ง ฟรอม ยู",
+    "translation": "ฉันตั้งตารอที่จะได้ข่าวจากคุณ",
+    "reason": "Look forward to ตามด้วย V.ing"
+},
+{
+    "question": "She couldn't _____ the noise outside.",
+    "options": ["A) put up with", "B) put up", "C) put in", "D) put off"],
+    "correct": "A",
+    "reading": "ชี คู้ดเด้นท์ พุท อัพ วิธ เดอะ นอยซ์ เอาท์ไซด์",
+    "translation": "เธอทนเสียงรบกวนข้างนอกไม่ได้",
+    "reason": "Put up with แปลว่า อดทน"
+},
+{
+    "question": "The police are _____ the matter.",
+    "options": ["A) looking into", "B) looking at", "C) looking for", "D) looking after"],
+    "correct": "A",
+    "reading": "เดอะ โพลิส อาร์ ลุคกิ้ง อินทู เดอะ แมทเทอร์",
+    "translation": "ตำรวจกำลังสืบสวนเรื่องนี้อยู่",
+    "reason": "Look into แปลว่า สืบสวน"
+},
+{
+    "question": "He _____ his father's advice.",
+    "options": ["A) took", "B) taken", "C) takes", "D) taking"],
+    "correct": "A",
+    "reading": "ฮี ทุค ฮิส ฟาเธอร์ส แอดไวซ์",
+    "translation": "เขาทำตามคำแนะนำของพ่อเขา",
+    "reason": "Take advice แปลว่า ทำตามคำแนะนำ"
+},
+{
+    "question": "The fire was eventually _____.",
+    "options": ["A) put out", "B) put off", "C) put on", "D) put up"],
+    "correct": "A",
+    "reading": "เดอะ ไฟร์ วอส อิเวนชวลลี่ พุท เอาท์",
+    "translation": "ในที่สุดไฟก็ถูกดับลง",
+    "reason": "Put out แปลว่า ดับไฟ"
+},
+{
+    "question": "It is _____ to finish this by tomorrow.",
+    "options": ["A) impossible", "B) possiblely", "C) impossibly", "D) impossibles"],
+    "correct": "A",
+    "reading": "อิท อีส อิมพอร์สซิเบิล ทู ฟินิช ดิส บาย ทูมอร์โรว์",
+    "translation": "มันเป็นไปไม่ได้ที่จะทำสิ่งนี้ให้เสร็จภายในวันพรุ่งนี้",
+    "reason": "หลัง verb to be ใช้ adjective"
+},
+{
+    "question": "She _____ a promotion last year.",
+    "options": ["A) was given", "B) gave", "C) was giving", "D) has given"],
+    "correct": "A",
+    "reading": "ชี วอส กิฝเวิน อะ โปรโมชั่น ลาสท์ เยียร์",
+    "translation": "เธอได้รับการเลื่อนตำแหน่งเมื่อปีที่แล้ว",
+    "reason": "Passive voice: เธอถูกกระทำ"
+},
+{
+    "question": "I would rather _____ at home today.",
+    "options": ["A) stay", "B) to stay", "C) staying", "D) stayed"],
+    "correct": "A",
+    "reading": "ไอ วู้ด ราเธอร์ สเตย์ แอท โฮม ทูเดย์",
+    "translation": "วันนี้ฉันอยากอยู่บ้านมากกว่า",
+    "reason": "Would rather ตามด้วย V.inf"
+},
+{
+    "question": "She is _____ than her brother.",
+    "options": ["A) taller", "B) more tall", "C) tall", "D) tallest"],
+    "correct": "A",
+    "reading": "ชี อีส ทอลเลอร์ แดน เฮอร์ บราเธอร์",
+    "translation": "เธอสูงกว่าพี่ชายของเธอ",
+    "reason": "Comparative form"
+},
+{
+    "question": "He didn't _____ the exam.",
+    "options": ["A) pass", "B) passed", "C) passing", "D) to pass"],
+    "correct": "A",
+    "reading": "ฮี ดิ๊ดเด้นท์ พาส ดิ อิกแซม",
+    "translation": "เขาไม่ได้สอบผ่าน",
+    "reason": "Did + V.inf"
+},
+{
+    "question": "The train _____ at 8 AM.",
+    "options": ["A) leaves", "B) is leaving", "C) left", "D) leave"],
+    "correct": "A",
+    "reading": "เดอะ เทรน ลีฟส์ แอท เอท เอเอ็ม",
+    "translation": "รถไฟออกตอน 8 โมงเช้า",
+    "reason": "ตารางเวลาใช้ Present Simple"
+},
+{
+    "question": "They _____ to play soccer after school.",
+    "options": ["A) decided", "B) decision", "C) decisive", "D) deciding"],
+    "correct": "A",
+    "reading": "เดย์ ดีไซด์ด ทู เพลย์ ซอคเกอร์ อาฟเตอร์ สคูล",
+    "translation": "พวกเขาตัดสินใจไปเตะบอลหลังเลิกเรียน",
+    "reason": "Decided to + V.inf"
+},
+{
+    "question": "She is _____ about the results.",
+    "options": ["A) worried", "B) worry", "C) worrying", "D) worries"],
+    "correct": "A",
+    "reading": "ชี อีส วอรี่ด์ อะเบ้าท์ เดอะ รีซัลท์ส",
+    "translation": "เธอกังวลเกี่ยวกับผลลัพธ์",
+    "reason": "ใช้ adjective บอกความรู้สึก"
+},
+{
+    "question": "I have _____ finished my homework.",
+    "options": ["A) already", "B) yet", "C) ever", "D) never"],
+    "correct": "A",
+    "reading": "ไอ แฮฝ ออลเรดดี้ ฟินิชด์ มาย โฮมเวิร์ค",
+    "translation": "ฉันทำการบ้านเสร็จเรียบร้อยแล้ว",
+    "reason": "Already ใช้ในประโยคบอกเล่า"
+},
+{
+    "question": "He has not finished his work _____.",
+    "options": ["A) yet", "B) already", "C) just", "D) ever"],
+    "correct": "A",
+    "reading": "ฮี แฮซ นอท ฟินิชด์ ฮิส เวิร์ค เยท",
+    "translation": "เขายังทำการบ้านไม่เสร็จ",
+    "reason": "Yet ใช้ในประโยคปฏิเสธ"
+},
+{
+    "question": "The book _____ I read was interesting.",
+    "options": ["A) that", "B) who", "C) where", "D) when"],
+    "correct": "A",
+    "reading": "เดอะ บุ๊ค แดท ไอ เรด วอส อินเทเรสติ้ง",
+    "translation": "หนังสือที่ฉันอ่านมันน่าสนใจ",
+    "reason": "Relative pronoun ขยายสิ่งของ"
+},
+{
+    "question": "She _____ me that she would come.",
+    "options": ["A) told", "B) said", "C) spoken", "D) talked"],
+    "correct": "A",
+    "reading": "ชี โทลด์ มี แดท ชี วู้ด คัม",
+    "translation": "เธอบอกฉันว่าเธอจะมา",
+    "reason": "Tell someone something"
+},
+{
+    "question": "He _____ to the store yesterday.",
+    "options": ["A) went", "B) go", "C) goes", "D) gone"],
+    "correct": "A",
+    "reading": "ฮี เวนท์ ทู เดอะ สตอร์ เยสเตอร์เดย์",
+    "translation": "เขาไปที่ร้านค้าเมื่อวานนี้",
+    "reason": "Past simple"
+},
+{
+    "question": "We are _____ to arrive soon.",
+    "options": ["A) about", "B) around", "C) above", "D) across"],
+    "correct": "A",
+    "reading": "วี อาร์ อะเบ้าท์ ทู อะไรฟ์ ซูน",
+    "translation": "พวกเรากำลังจะถึงในไม่ช้า",
+    "reason": "Be about to แปลว่า กำลังจะ"
+},
+{
+    "question": "She is a _____ student.",
+    "options": ["A) hardworking", "B) workhard", "C) hardworked", "D) works hard"],
+    "correct": "A",
+    "reading": "ชี อีส อะ ฮาร์ดเวิร์คกิ้ง สติวเดนท์",
+    "translation": "เธอเป็นนักเรียนที่ขยัน",
+    "reason": "Compound adjective"
+},
+{
+    "question": "He was _____ for being late.",
+    "options": ["A) punished", "B) punishes", "C) punishing", "D) punish"],
+    "correct": "A",
+    "reading": "ฮี วอส พั๊นนช์ด ฟอร์ บีอิ้ง เลท",
+    "translation": "เขาถูกลงโทษเพราะมาสาย",
+    "reason": "Passive voice"
+},
+{
+    "question": "The sun _____ in the east.",
+    "options": ["A) rises", "B) rising", "C) rose", "D) rise"],
+    "correct": "A",
+    "reading": "เดอะ ซัน ไรเซส อิน ดิ อีสท์",
+    "translation": "พระอาทิตย์ขึ้นทางทิศตะวันออก",
+    "reason": "ความจริงตามธรรมชาติ"
+},
+{
+    "question": "She _____ her phone in the room.",
+    "options": ["A) left", "B) leave", "C) leaves", "D) leaving"],
+    "correct": "A",
+    "reading": "ชี เลฟท์ เฮอร์ โฟน อิน เดอะ รูม",
+    "translation": "เธอลืมโทรศัพท์ไว้ในห้อง",
+    "reason": "Past tense"
+},
+{
+    "question": "They are _____ to have a baby.",
+    "options": ["A) expecting", "B) expect", "C) expects", "D) expected"],
+    "correct": "A",
+    "reading": "เดย์ อาร์ เอ็กซ์เป็คติ้ง ทู แฮฝ อะ เบบี้",
+    "translation": "พวกเขากำลังจะมีลูก",
+    "reason": "Expect แปลว่า คาดหวัง/กำลังจะมี"
+},
+{
+    "question": "He _____ me a favour.",
+    "options": ["A) did", "B) made", "C) gave", "D) took"],
+    "correct": "A",
+    "reading": "ฮี ดิด มี อะ เฟเวอร์",
+    "translation": "เขาช่วยฉัน (ทำความดีให้)",
+    "reason": "Do a favour"
+},
+{
+    "question": "The plan _____ perfectly.",
+    "options": ["A) worked out", "B) worked in", "C) worked on", "D) worked off"],
+    "correct": "A",
+    "reading": "เดอะ แพลน เวิร์คด เอาท์ เพอร์เฟ็คท์ลี่",
+    "translation": "แผนการดำเนินไปได้อย่างสมบูรณ์แบบ",
+    "reason": "Work out แปลว่า สำเร็จ/ดำเนินไปได้"
+},
+{
+    "question": "She _____ the opportunity to travel.",
+    "options": ["A) took", "B) made", "C) gave", "D) had"],
+    "correct": "A",
+    "reading": "ชี ทุค ดิ ออพพอร์ทูนิตี้ ทู แทรเวล",
+    "translation": "เธอคว้าโอกาสในการเดินทาง",
+    "reason": "Take an opportunity"
+},
+{
+    "question": "I have _____ to see the manager.",
+    "options": ["A) an appointment", "B) a schedule", "C) a meeting", "D) a date"],
+    "correct": "A",
+    "reading": "ไอ แฮฝ แอน อะพอยท์เม้นท์ ทู ซี เดอะ เมเนเจอร์",
+    "translation": "ฉันมีนัดพบผู้จัดการ",
+    "reason": "Appointment เป็นทางการ"
+},
+{
+    "question": "He _____ all his money on clothes.",
+    "options": ["A) spent", "B) spend", "C) spends", "D) spending"],
+    "correct": "A",
+    "reading": "ฮี สเปนท์ ออล ฮิส มันนี่ ออน โคลธส์",
+    "translation": "เขาใช้เงินทั้งหมดของเขาไปกับเสื้อผ้า",
+    "reason": "Spend + money + on"
+},
+{
+    "question": "She is _____ to be an artist.",
+    "options": ["A) aiming", "B) aim", "C) aimed", "D) aims"],
+    "correct": "A",
+    "reading": "ชี อีส เอมมิ่ง ทู บี แอน อาร์ทิสท์",
+    "translation": "เธอกำลังตั้งเป้าหมายที่จะเป็นศิลปิน",
+    "reason": "Aim to + V.inf"
+},
+{
+    "question": "The result is _____ to everyone.",
+    "options": ["A) clear", "B) clearly", "C) clearer", "D) clearest"],
+    "correct": "A",
+    "reading": "เดอะ รีซัลท์ อีส เคลียร์ ทู เอวรีวัน",
+    "translation": "ผลลัพธ์นั้นชัดเจนสำหรับทุกคน",
+    "reason": "ใช้ adjective"
+},
+{
+    "question": "He _____ in the local bank.",
+    "options": ["A) works", "B) work", "C) working", "D) worked"],
+    "correct": "A",
+    "reading": "ฮี เวิร์คส์ อิน เดอะ โลคอล แบงค์",
+    "translation": "เขาทำงานที่ธนาคารท้องถิ่น",
+    "reason": "Present simple"
+},
+{
+    "question": "She _____ the report yesterday.",
+    "options": ["A) submitted", "B) submit", "C) submits", "D) submitting"],
+    "correct": "A",
+    "reading": "ชี ซับมิทท์ด เดอะ รีพอร์ท เยสเตอร์เดย์",
+    "translation": "เธอส่งรายงานเมื่อวานนี้",
+    "reason": "Past simple"
+},
+{
+    "question": "They _____ to go to the park.",
+    "options": ["A) want", "B) wants", "C) wanting", "D) wanted"],
+    "correct": "A",
+    "reading": "เดย์ ว้อนท์ ทู โก ทู เดอะ พาร์ค",
+    "translation": "พวกเขาต้องการไปที่สวนสาธารณะ",
+    "reason": "ประธานพหูพจน์"
+},
+{
+    "question": "She _____ a delicious meal.",
+    "options": ["A) cooked", "B) cook", "C) cooks", "D) cooking"],
+    "correct": "A",
+    "reading": "ชี คุคท์ อะ ดิลิเชียส มีล",
+    "translation": "เธอทำอาหารมื้ออร่อย",
+    "reason": "Past simple"
+},
+{
+    "question": "He _____ the door carefully.",
+    "options": ["A) locked", "B) lock", "C) locks", "D) locking"],
+    "correct": "A",
+    "reading": "ฮี ล็อคท์ เดอะ ดอร์ แคร์ฟูลลี่",
+    "translation": "เขาล็อคประตูอย่างระมัดระวัง",
+    "reason": "Past simple"
+},
+{
+    "question": "The students _____ the lesson.",
+    "options": ["A) understood", "B) understand", "C) understands", "D) understanding"],
+    "correct": "A",
+    "reading": "เดอะ สติวเดนท์ส อันเดอร์สโต๊ด เดอะ เลสเซิน",
+    "translation": "นักเรียนเข้าใจบทเรียนนั้น",
+    "reason": "Past simple"
+},
+{
+    "question": "She _____ her grandmother yesterday.",
+    "options": ["A) visited", "B) visit", "C) visits", "D) visiting"],
+    "correct": "A",
+    "reading": "ชี วิสิทท์ด เฮอร์ แกรนด์มาเธอร์ เยสเตอร์เดย์",
+    "translation": "เธอไปเยี่ยมคุณย่าเมื่อวานนี้",
+    "reason": "Past simple"
+},
+{
+    "question": "He _____ his keys.",
+    "options": ["A) lost", "B) lose", "C) loses", "D) losing"],
+    "correct": "A",
+    "reading": "ฮี ลอสท์ ฮิส คีย์ส",
+    "translation": "เขาทำกุญแจหาย",
+    "reason": "Past simple"
+},
+{
+    "question": "They _____ a new car.",
+    "options": ["A) bought", "B) buy", "C) buys", "D) buying"],
+    "correct": "A",
+    "reading": "เดย์ บอท อะ นิว คาร์",
+    "translation": "พวกเขาซื้อรถคันใหม่",
+    "reason": "Past simple"
+},
+{
+    "question": "He needs to _____ the habit of biting his nails.",
+    "options": ["A) break", "B) broken", "C) broke", "D) breaking"],
+    "correct": "A",
+    "reading": "ฮี นีดส์ ทู เบรค เดอะ แฮบิท ออฟ ไบท์ทิ่ง ฮิส เนลส์",
+    "translation": "เขาจำเป็นต้องเลิกนิสัยกัดเล็บ",
+    "reason": "Break the habit เป็นสำนวนมาตรฐาน"
+},
+{
+    "question": "The company decided to _____ the new project due to budget cuts.",
+    "options": ["A) call off", "B) call up", "C) call in", "D) call at"],
+    "correct": "A",
+    "reading": "เดอะ คัมพานี ดีไซด์ด ทู คอล ออฟ เดอะ นิว โปรเจ็คท์ ดู ทู บัดเจ็ท คัทส์",
+    "translation": "บริษัทตัดสินใจยกเลิกโครงการใหม่เนื่องจากการตัดงบประมาณ",
+    "reason": "Call off แปลว่า ยกเลิก"
+},
+{
+    "question": "She _____ a lot of pressure at work lately.",
+    "options": ["A) has been under", "B) is under", "C) under", "D) has under"],
+    "correct": "A",
+    "reading": "ชี แฮซ บีน อันเดอร์ อะ ล็อท ออฟ เพรสเชอร์ แอท เวิร์ค เลทลี่",
+    "translation": "เธอต้องเผชิญกับความกดดันอย่างมากในการทำงานเมื่อเร็วๆ นี้",
+    "reason": "Be under pressure แปลว่า อยู่ภายใต้ความกดดัน"
+},
+{
+    "question": "If you _____ earlier, you would have caught the train.",
+    "options": ["A) had left", "B) have left", "C) left", "D) would leave"],
+    "correct": "A",
+    "reading": "อิฟ ยู แฮด เลฟท์ เออร์เลียร์, ยู วู้ด แฮฝ คอท เดอะ เทรน",
+    "translation": "ถ้าคุณออกเดินทางเร็วกว่านี้ คุณคงทันรถไฟแล้ว",
+    "reason": "Conditional Type 3: If + Past Perfect, Subject + would have + V.3"
+},
+{
+    "question": "The meeting was _____ until next week.",
+    "options": ["A) put off", "B) put on", "C) put out", "D) put away"],
+    "correct": "A",
+    "reading": "เดอะ มีทติ้ง วอส พุท ออฟ อันทิล เน็กซ์ท วีค",
+    "translation": "การประชุมถูกเลื่อนออกไปจนถึงสัปดาห์หน้า",
+    "reason": "Put off แปลว่า เลื่อนออกไป"
+},
+{
+    "question": "I don't _____ with his opinion on this matter.",
+    "options": ["A) see eye to eye", "B) look face to face", "C) talk ear to ear", "D) walk hand in hand"],
+    "correct": "A",
+    "reading": "ไอ โด๊นท์ ซี อาย ทู อาย วิธ ฮิส อะพินเนียน ออน ดิส แมทเทอร์",
+    "translation": "ฉันไม่เห็นด้วยกับความเห็นของเขาในเรื่องนี้",
+    "reason": "See eye to eye เป็นสำนวนแปลว่า เห็นด้วย"
+},
+{
+    "question": "She is _____ to win the championship.",
+    "options": ["A) likely", "B) like", "C) likes", "D) liking"],
+    "correct": "A",
+    "reading": "ชี อีส ไลค์ลี่ ทู วิน เดอะ แชมเปี้ยนชิพ",
+    "translation": "เธอมีแนวโน้มที่จะชนะการแข่งขันชิงแชมป์",
+    "reason": "Be likely to ตามด้วย V.inf"
+},
+{
+    "question": "We should _____ our resources wisely.",
+    "options": ["A) make use of", "B) make use", "C) use making of", "D) using of"],
+    "correct": "A",
+    "reading": "วี ชู้ด เมค ยูส ออฟ เอาเวอร์ รีซอร์สเซส ไวซ์ลี่",
+    "translation": "เราควรใช้ทรัพยากรของเราอย่างชาญฉลาด",
+    "reason": "Make use of เป็น collocation"
+},
+{
+    "question": "He has a _____ personality that attracts people.",
+    "options": ["A) magnetic", "B) magnet", "C) magnetical", "D) magnetism"],
+    "correct": "A",
+    "reading": "ฮี แฮซ อะ แมกเนททิค เพอร์ซันแนลลิตี้ แดท แอทแทร็คท์ส พีเพิล",
+    "translation": "เขามีบุคลิกที่มีเสน่ห์ดึงดูดผู้คน",
+    "reason": "Magnetic personality ใช้เป็นคำคุณศัพท์"
+},
+{
+    "question": "Despite _____, she remained calm.",
+    "options": ["A) the danger", "B) dangerous", "C) dangerly", "D) in danger"],
+    "correct": "A",
+    "reading": "ดิสพายท์ เดอะ เดนเจอร์, ชี รีเมนด์ คาล์ม",
+    "translation": "แม้จะตกอยู่ในอันตราย เธอก็ยังคงใจเย็น",
+    "reason": "Despite ต้องตามด้วยคำนาม"
+},
+{
+    "question": "I am _____ to hearing from you.",
+    "options": ["A) looking forward", "B) look forward", "C) looked forward", "D) looks forward"],
+    "correct": "A",
+    "reading": "ไอ แอม ลุคกิ้ง ฟอร์เวิร์ด ทู เฮียรริ่ง ฟรอม ยู",
+    "translation": "ฉันตั้งตารอที่จะได้ข่าวจากคุณ",
+    "reason": "Look forward to ตามด้วย V.ing"
+},
+{
+    "question": "She couldn't _____ the noise outside.",
+    "options": ["A) put up with", "B) put up", "C) put in", "D) put off"],
+    "correct": "A",
+    "reading": "ชี คู้ดเด้นท์ พุท อัพ วิธ เดอะ นอยซ์ เอาท์ไซด์",
+    "translation": "เธอทนเสียงรบกวนข้างนอกไม่ได้",
+    "reason": "Put up with แปลว่า อดทน"
+},
+{
+    "question": "The police are _____ the matter.",
+    "options": ["A) looking into", "B) looking at", "C) looking for", "D) looking after"],
+    "correct": "A",
+    "reading": "เดอะ โพลิส อาร์ ลุคกิ้ง อินทู เดอะ แมทเทอร์",
+    "translation": "ตำรวจกำลังสืบสวนเรื่องนี้อยู่",
+    "reason": "Look into แปลว่า สืบสวน"
+},
+{
+    "question": "He _____ his father's advice.",
+    "options": ["A) took", "B) taken", "C) takes", "D) taking"],
+    "correct": "A",
+    "reading": "ฮี ทุค ฮิส ฟาเธอร์ส แอดไวซ์",
+    "translation": "เขาทำตามคำแนะนำของพ่อเขา",
+    "reason": "Take advice แปลว่า ทำตามคำแนะนำ"
+},
+{
+    "question": "The fire was eventually _____.",
+    "options": ["A) put out", "B) put off", "C) put on", "D) put up"],
+    "correct": "A",
+    "reading": "เดอะ ไฟร์ วอส อิเวนชวลลี่ พุท เอาท์",
+    "translation": "ในที่สุดไฟก็ถูกดับลง",
+    "reason": "Put out แปลว่า ดับไฟ"
+},
+{
+    "question": "It is _____ to finish this by tomorrow.",
+    "options": ["A) impossible", "B) possiblely", "C) impossibly", "D) impossibles"],
+    "correct": "A",
+    "reading": "อิท อีส อิมพอร์สซิเบิล ทู ฟินิช ดิส บาย ทูมอร์โรว์",
+    "translation": "มันเป็นไปไม่ได้ที่จะทำสิ่งนี้ให้เสร็จภายในวันพรุ่งนี้",
+    "reason": "หลัง verb to be ใช้ adjective"
+},
+{
+    "question": "She _____ a promotion last year.",
+    "options": ["A) was given", "B) gave", "C) was giving", "D) has given"],
+    "correct": "A",
+    "reading": "ชี วอส กิฝเวิน อะ โปรโมชั่น ลาสท์ เยียร์",
+    "translation": "เธอได้รับการเลื่อนตำแหน่งเมื่อปีที่แล้ว",
+    "reason": "Passive voice: เธอถูกกระทำ"
+},
+{
+    "question": "I would rather _____ at home today.",
+    "options": ["A) stay", "B) to stay", "C) staying", "D) stayed"],
+    "correct": "A",
+    "reading": "ไอ วู้ด ราเธอร์ สเตย์ แอท โฮม ทูเดย์",
+    "translation": "วันนี้ฉันอยากอยู่บ้านมากกว่า",
+    "reason": "Would rather ตามด้วย V.inf"
+},
+{
+    "question": "She is _____ than her brother.",
+    "options": ["A) taller", "B) more tall", "C) tall", "D) tallest"],
+    "correct": "A",
+    "reading": "ชี อีส ทอลเลอร์ แดน เฮอร์ บราเธอร์",
+    "translation": "เธอสูงกว่าพี่ชายของเธอ",
+    "reason": "Comparative form"
+},
+{
+    "question": "He didn't _____ the exam.",
+    "options": ["A) pass", "B) passed", "C) passing", "D) to pass"],
+    "correct": "A",
+    "reading": "ฮี ดิ๊ดเด้นท์ พาส ดิ อิกแซม",
+    "translation": "เขาไม่ได้สอบผ่าน",
+    "reason": "Did + V.inf"
+},
+{
+    "question": "The train _____ at 8 AM.",
+    "options": ["A) leaves", "B) is leaving", "C) left", "D) leave"],
+    "correct": "A",
+    "reading": "เดอะ เทรน ลีฟส์ แอท เอท เอเอ็ม",
+    "translation": "รถไฟออกตอน 8 โมงเช้า",
+    "reason": "ตารางเวลาใช้ Present Simple"
+},
+{
+    "question": "They _____ to play soccer after school.",
+    "options": ["A) decided", "B) decision", "C) decisive", "D) deciding"],
+    "correct": "A",
+    "reading": "เดย์ ดีไซด์ด ทู เพลย์ ซอคเกอร์ อาฟเตอร์ สคูล",
+    "translation": "พวกเขาตัดสินใจไปเตะบอลหลังเลิกเรียน",
+    "reason": "Decided to + V.inf"
+},
+{
+    "question": "She is _____ about the results.",
+    "options": ["A) worried", "B) worry", "C) worrying", "D) worries"],
+    "correct": "A",
+    "reading": "ชี อีส วอรี่ด์ อะเบ้าท์ เดอะ รีซัลท์ส",
+    "translation": "เธอกังวลเกี่ยวกับผลลัพธ์",
+    "reason": "ใช้ adjective บอกความรู้สึก"
+},
+{
+    "question": "I have _____ finished my homework.",
+    "options": ["A) already", "B) yet", "C) ever", "D) never"],
+    "correct": "A",
+    "reading": "ไอ แฮฝ ออลเรดดี้ ฟินิชด์ มาย โฮมเวิร์ค",
+    "translation": "ฉันทำการบ้านเสร็จเรียบร้อยแล้ว",
+    "reason": "Already ใช้ในประโยคบอกเล่า"
+},
+{
+    "question": "He has not finished his work _____.",
+    "options": ["A) yet", "B) already", "C) just", "D) ever"],
+    "correct": "A",
+    "reading": "ฮี แฮซ นอท ฟินิชด์ ฮิส เวิร์ค เยท",
+    "translation": "เขายังทำการบ้านไม่เสร็จ",
+    "reason": "Yet ใช้ในประโยคปฏิเสธ"
+},
+{
+    "question": "The book _____ I read was interesting.",
+    "options": ["A) that", "B) who", "C) where", "D) when"],
+    "correct": "A",
+    "reading": "เดอะ บุ๊ค แดท ไอ เรด วอส อินเทเรสติ้ง",
+    "translation": "หนังสือที่ฉันอ่านมันน่าสนใจ",
+    "reason": "Relative pronoun ขยายสิ่งของ"
+},
+{
+    "question": "She _____ me that she would come.",
+    "options": ["A) told", "B) said", "C) spoken", "D) talked"],
+    "correct": "A",
+    "reading": "ชี โทลด์ มี แดท ชี วู้ด คัม",
+    "translation": "เธอบอกฉันว่าเธอจะมา",
+    "reason": "Tell someone something"
+},
+{
+    "question": "He _____ to the store yesterday.",
+    "options": ["A) went", "B) go", "C) goes", "D) gone"],
+    "correct": "A",
+    "reading": "ฮี เวนท์ ทู เดอะ สตอร์ เยสเตอร์เดย์",
+    "translation": "เขาไปที่ร้านค้าเมื่อวานนี้",
+    "reason": "Past simple"
+},
+{
+    "question": "We are _____ to arrive soon.",
+    "options": ["A) about", "B) around", "C) above", "D) across"],
+    "correct": "A",
+    "reading": "วี อาร์ อะเบ้าท์ ทู อะไรฟ์ ซูน",
+    "translation": "พวกเรากำลังจะถึงในไม่ช้า",
+    "reason": "Be about to แปลว่า กำลังจะ"
+},
+{
+    "question": "She is a _____ student.",
+    "options": ["A) hardworking", "B) workhard", "C) hardworked", "D) works hard"],
+    "correct": "A",
+    "reading": "ชี อีส อะ ฮาร์ดเวิร์คกิ้ง สติวเดนท์",
+    "translation": "เธอเป็นนักเรียนที่ขยัน",
+    "reason": "Compound adjective"
+},
+{
+    "question": "He was _____ for being late.",
+    "options": ["A) punished", "B) punishes", "C) punishing", "D) punish"],
+    "correct": "A",
+    "reading": "ฮี วอส พั๊นนช์ด ฟอร์ บีอิ้ง เลท",
+    "translation": "เขาถูกลงโทษเพราะมาสาย",
+    "reason": "Passive voice"
+},
+{
+    "question": "The sun _____ in the east.",
+    "options": ["A) rises", "B) rising", "C) rose", "D) rise"],
+    "correct": "A",
+    "reading": "เดอะ ซัน ไรเซส อิน ดิ อีสท์",
+    "translation": "พระอาทิตย์ขึ้นทางทิศตะวันออก",
+    "reason": "ความจริงตามธรรมชาติ"
+},
+{
+    "question": "She _____ her phone in the room.",
+    "options": ["A) left", "B) leave", "C) leaves", "D) leaving"],
+    "correct": "A",
+    "reading": "ชี เลฟท์ เฮอร์ โฟน อิน เดอะ รูม",
+    "translation": "เธอลืมโทรศัพท์ไว้ในห้อง",
+    "reason": "Past tense"
+},
+{
+    "question": "They are _____ to have a baby.",
+    "options": ["A) expecting", "B) expect", "C) expects", "D) expected"],
+    "correct": "A",
+    "reading": "เดย์ อาร์ เอ็กซ์เป็คติ้ง ทู แฮฝ อะ เบบี้",
+    "translation": "พวกเขากำลังจะมีลูก",
+    "reason": "Expect แปลว่า คาดหวัง/กำลังจะมี"
+},
+{
+    "question": "He _____ me a favour.",
+    "options": ["A) did", "B) made", "C) gave", "D) took"],
+    "correct": "A",
+    "reading": "ฮี ดิด มี อะ เฟเวอร์",
+    "translation": "เขาช่วยฉัน (ทำความดีให้)",
+    "reason": "Do a favour"
+},
+{
+    "question": "The plan _____ perfectly.",
+    "options": ["A) worked out", "B) worked in", "C) worked on", "D) worked off"],
+    "correct": "A",
+    "reading": "เดอะ แพลน เวิร์คด เอาท์ เพอร์เฟ็คท์ลี่",
+    "translation": "แผนการดำเนินไปได้อย่างสมบูรณ์แบบ",
+    "reason": "Work out แปลว่า สำเร็จ/ดำเนินไปได้"
+},
+{
+    "question": "She _____ the opportunity to travel.",
+    "options": ["A) took", "B) made", "C) gave", "D) had"],
+    "correct": "A",
+    "reading": "ชี ทุค ดิ ออพพอร์ทูนิตี้ ทู แทรเวล",
+    "translation": "เธอคว้าโอกาสในการเดินทาง",
+    "reason": "Take an opportunity"
+},
+{
+    "question": "I have _____ to see the manager.",
+    "options": ["A) an appointment", "B) a schedule", "C) a meeting", "D) a date"],
+    "correct": "A",
+    "reading": "ไอ แฮฝ แอน อะพอยท์เม้นท์ ทู ซี เดอะ เมเนเจอร์",
+    "translation": "ฉันมีนัดพบผู้จัดการ",
+    "reason": "Appointment เป็นทางการ"
+},
+{
+    "question": "He _____ all his money on clothes.",
+    "options": ["A) spent", "B) spend", "C) spends", "D) spending"],
+    "correct": "A",
+    "reading": "ฮี สเปนท์ ออล ฮิส มันนี่ ออน โคลธส์",
+    "translation": "เขาใช้เงินทั้งหมดของเขาไปกับเสื้อผ้า",
+    "reason": "Spend + money + on"
+},
+{
+    "question": "She is _____ to be an artist.",
+    "options": ["A) aiming", "B) aim", "C) aimed", "D) aims"],
+    "correct": "A",
+    "reading": "ชี อีส เอมมิ่ง ทู บี แอน อาร์ทิสท์",
+    "translation": "เธอกำลังตั้งเป้าหมายที่จะเป็นศิลปิน",
+    "reason": "Aim to + V.inf"
+},
+{
+    "question": "The result is _____ to everyone.",
+    "options": ["A) clear", "B) clearly", "C) clearer", "D) clearest"],
+    "correct": "A",
+    "reading": "เดอะ รีซัลท์ อีส เคลียร์ ทู เอวรีวัน",
+    "translation": "ผลลัพธ์นั้นชัดเจนสำหรับทุกคน",
+    "reason": "ใช้ adjective"
+},
+{
+    "question": "He _____ in the local bank.",
+    "options": ["A) works", "B) work", "C) working", "D) worked"],
+    "correct": "A",
+    "reading": "ฮี เวิร์คส์ อิน เดอะ โลคอล แบงค์",
+    "translation": "เขาทำงานที่ธนาคารท้องถิ่น",
+    "reason": "Present simple"
+},
+{
+    "question": "She _____ the report yesterday.",
+    "options": ["A) submitted", "B) submit", "C) submits", "D) submitting"],
+    "correct": "A",
+    "reading": "ชี ซับมิทท์ด เดอะ รีพอร์ท เยสเตอร์เดย์",
+    "translation": "เธอส่งรายงานเมื่อวานนี้",
+    "reason": "Past simple"
+},
+{
+    "question": "They _____ to go to the park.",
+    "options": ["A) want", "B) wants", "C) wanting", "D) wanted"],
+    "correct": "A",
+    "reading": "เดย์ ว้อนท์ ทู โก ทู เดอะ พาร์ค",
+    "translation": "พวกเขาต้องการไปที่สวนสาธารณะ",
+    "reason": "ประธานพหูพจน์"
+},
+{
+    "question": "She _____ a delicious meal.",
+    "options": ["A) cooked", "B) cook", "C) cooks", "D) cooking"],
+    "correct": "A",
+    "reading": "ชี คุคท์ อะ ดิลิเชียส มีล",
+    "translation": "เธอทำอาหารมื้ออร่อย",
+    "reason": "Past simple"
+},
+{
+    "question": "He _____ the door carefully.",
+    "options": ["A) locked", "B) lock", "C) locks", "D) locking"],
+    "correct": "A",
+    "reading": "ฮี ล็อคท์ เดอะ ดอร์ แคร์ฟูลลี่",
+    "translation": "เขาล็อคประตูอย่างระมัดระวัง",
+    "reason": "Past simple"
+},
+{
+    "question": "The students _____ the lesson.",
+    "options": ["A) understood", "B) understand", "C) understands", "D) understanding"],
+    "correct": "A",
+    "reading": "เดอะ สติวเดนท์ส อันเดอร์สโต๊ด เดอะ เลสเซิน",
+    "translation": "นักเรียนเข้าใจบทเรียนนั้น",
+    "reason": "Past simple"
+},
+{
+    "question": "She _____ her grandmother yesterday.",
+    "options": ["A) visited", "B) visit", "C) visits", "D) visiting"],
+    "correct": "A",
+    "reading": "ชี วิสิทท์ด เฮอร์ แกรนด์มาเธอร์ เยสเตอร์เดย์",
+    "translation": "เธอไปเยี่ยมคุณย่าเมื่อวานนี้",
+    "reason": "Past simple"
+},
+{
+    "question": "He _____ his keys.",
+    "options": ["A) lost", "B) lose", "C) loses", "D) losing"],
+    "correct": "A",
+    "reading": "ฮี ลอสท์ ฮิส คีย์ส",
+    "translation": "เขาทำกุญแจหาย",
+    "reason": "Past simple"
+},
+{
+    "question": "They _____ a new car.",
+    "options": ["A) bought", "B) buy", "C) buys", "D) buying"],
+    "correct": "A",
+    "reading": "เดย์ บอท อะ นิว คาร์",
+    "translation": "พวกเขาซื้อรถคันใหม่",
+    "reason": "Past simple"
+}
+    ]
+};
+
+let selectedDifficulty = 'easy';
+let selectedNumQuestions = 25;
+let currentQuestions = [];
+let currentIndex = 0;
+let userAnswers = []; 
+let isTransitioning = false; // ตัวแปรล็อกระบบป้องกันผู้ใช้เบิ้ลคลิกซ้ำซ้อนขณะเปลี่ยนข้อ
+
+window.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.getElementById('load-progress');
+    let width = 0;
+    const interval = setInterval(() => {
+        if (width >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+                const screen = document.getElementById('loading-screen');
+                screen.style.opacity = '0';
+                setTimeout(() => screen.classList.add('hidden'), 500);
+            }, 300);
+        } else {
+            width += 2; 
+            progressBar.style.width = width + '%';
+        }
+    }, 30); 
+});
+
+function goToSetup() {
+    document.getElementById('lesson-view').classList.add('hidden');
+    document.getElementById('setup-view').classList.remove('hidden');
+}
+
+function selectDifficulty(diff) {
+    document.getElementById('diff-easy').classList.remove('selected');
+    document.getElementById('diff-medium').classList.remove('selected');
+    document.getElementById('diff-hard').classList.remove('selected');
+    document.getElementById('diff-' + diff).classList.add('selected');
+    selectedDifficulty = diff;
+}
+
+function selectNumQuestions(num) {
+    document.getElementById('num-25').classList.remove('selected');
+    document.getElementById('num-50').classList.remove('selected');
+    document.getElementById('num-100').classList.remove('selected');
+    document.getElementById('num-' + num).classList.add('selected');
+    selectedNumQuestions = num;
+}
+
+function startQuiz() {
+    let repo = [...QUESTION_BANK[selectedDifficulty]];
+    if(repo.length === 0) {
+        alert("ยังไม่มีข้อสอบในระดับนี้ครับ");
+        return;
+    }
+    
+    repo.sort(() => Math.random() - 0.5);
+    currentQuestions = repo.slice(0, Math.min(selectedNumQuestions, repo.length));
+    
+    currentIndex = 0;
+    userAnswers = new Array(currentQuestions.length).fill(null);
+    
+    document.getElementById('setup-view').classList.add('hidden');
+    document.getElementById('quiz-view').classList.remove('hidden');
+    
+    showQuestion();
+}
+
+function showQuestion() {
+    isTransitioning = false; // ปลดล็อกหน้าจอเมื่อเข้าสู่ข้อถัดไปสมบูรณ์
+    document.getElementById('container-gif-loading').classList.remove('hidden');
+
+    const q = currentQuestions[currentIndex];
+    
+    // จัดการการแสดงผลปุ่มย้อนกลับ
+    if (currentIndex === 0) {
+        document.getElementById('back-btn').classList.add('hidden');
+    } else {
+        document.getElementById('back-btn').classList.remove('hidden');
+    }
+    
+    document.getElementById('quiz-progress').innerText = `ข้อที่ ${currentIndex + 1} / ${currentQuestions.length}`;
+    document.getElementById('question-text').innerText = `โจทย์: ${q.question}`;
+    
+    const container = document.getElementById('options-container');
+    container.innerHTML = '';
+    
+    q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'answerBtn';
+        btn.id = `a${idx}`; 
+        btn.innerText = opt;
+        
+        // เคสที่ย้อนกลับมาดูข้อเดิม ให้ทำไฮไลท์ค้างไว้
+        if (userAnswers[currentIndex] === opt.charAt(0)) {
+            btn.style.background = "#fbc02d";
+            btn.style.border = "2px solid #000000";
+        }
+        
+        btn.onclick = () => selectAnswer(opt.charAt(0));
+        container.appendChild(btn);
+    });
+}
+
+// ✨ ฟังก์ชันรับคำตอบแล้วดีเลย์ขยับข้อให้เองออโต้!
+function selectAnswer(chosenLetter) {
+    if (isTransitioning) return; // ถ้ากำลังย้ายข้ออยู่ ไม่ให้รันซ้ำซ้อน
+    
+    userAnswers[currentIndex] = chosenLetter;
+    
+    // ไฮไลท์สีเหลืองบนปุ่มที่เพิ่งกดเลือก
+    const container = document.getElementById('options-container');
+    const buttons = container.querySelectorAll('.answerBtn');
+    buttons.forEach(btn => {
+        if (btn.innerText.charAt(0) === chosenLetter) {
+            btn.style.background = "#fbc02d";
+            btn.style.border = "2px solid #000000";
+        } else {
+            btn.style.background = ""; 
+            btn.style.border = "";
+        }
+    });
+
+    isTransitioning = true; // ล็อกปุ่มไว้ครู่หนึ่งระหว่างรอย้ายข้อ
+
+    // ดีเลย์ 400 มิลลิวินาที (ครึ่งวินาทีโดยประมาณ) เพื่อความลื่นไหลทางสายตา แล้วขยับข้อออโต้
+    setTimeout(() => {
+        currentIndex++;
+        if (currentIndex < currentQuestions.length) {
+            showQuestion();
+        } else {
+            showResult(); // หากครบตามจำนวนที่ตั้งไว้ จะเข้าหน้าสรุปผลทันที
+        }
+    }, 400);
+}
+
+function backQuestion() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        showQuestion();
+    }
+}
+
+// 📊 สรุปผลและแสดงกล่องเฉลยกระดาษข้อสอบ (เวอร์ชันคลีนเพียว ๆ ไม่มีรูปภาพใด ๆ ทั้งสิ้น)
+function showResult() {
+    let totalScore = 0;
+    currentQuestions.forEach((q, idx) => {
+        if (userAnswers[idx] === q.correct) {
+            totalScore++;
+        }
+    });
+
+    document.getElementById('quiz-view').classList.add('hidden');
+    
+    const resultView = document.getElementById('result-view');
+    resultView.classList.remove('hidden');
+
+    // ล้างกล่องเก่าทิ้งก่อนเพื่อป้องกันข้อมูลซ้อนกันเวลากดเล่นซ้ำ
+    const oldTopContainer = document.getElementById('result-gifs-container');
+    if (oldTopContainer) oldTopContainer.remove();
+    const oldReview = document.getElementById('final-review-section');
+    if (oldReview) oldReview.remove();
+
+    // แสดงข้อความคะแนนรวมตรง ๆ (ไม่มีคำชมเหลืออยู่)
+    const scoreElement = document.getElementById('score-text');
+    scoreElement.innerText = `คุณได้คะแนนรวม: ${totalScore} / ${currentQuestions.length} คะแนน`;
+    if (scoreElement.nextElementSibling) {
+        scoreElement.nextElementSibling.innerText = ""; 
+    }
+
+    // สร้างพื้นที่แสดงผลกระดาษเฉลยละเอียดต่อท้ายยาวลงไปด้านล่าง
+    const reviewSection = document.createElement('div');
+    reviewSection.id = 'final-review-section';
+    reviewSection.style.marginTop = "30px";
+    reviewSection.innerHTML = `<h3 style="border-bottom: 2px solid #757575; padding-bottom: 10px; text-align: center;">📝 รายงานเฉลยละเอียดทุกข้อ</h3>`;
+
+    currentQuestions.forEach((q, idx) => {
+        const isCorrect = userAnswers[idx] === q.correct;
+        const card = document.createElement('div');
+        
+        card.className = isCorrect ? 'review-box correct-status' : 'review-box wrong-status';
+        card.style.background = "rgba(255, 255, 255, 0.5)";
+        card.style.marginBottom = "20px";
+        
+        card.innerHTML = `
+            <h4 style="margin: 0 0 10px 0;">ข้อที่ ${idx + 1}: ${q.question}</h4>
+            <p><strong>❌ คำตอบที่คุณเลือก:</strong> ตัวเลือก ${userAnswers[idx] || 'ไม่ได้ตอบ'} ${isCorrect ? '✅ (ถูกต้อง)' : '❌ (ผิด)'}</p>
+            <p><strong>🎯 เฉลยที่ถูกต้อง:</strong> ตัวเลือก ${q.correct}</p>
+            <p><strong>🗣️ คำอ่านโจทย์:</strong> ${q.reading}</p>
+            <p><strong>🇹🇭 คำแปลโจทย์:</strong> ${q.translation}</p>
+            <p><strong>💡 คำอธิบายเหตุผล:</strong> ${q.reason}</p>
+        `;
+        reviewSection.appendChild(card);
+    });
+
+    resultView.appendChild(reviewSection);
+}
+    resultView.appendChild(reviewSection);
+    document.getElementById('score-text').innerText = `คุณได้คะแนนรวม: ${totalScore} / ${currentQuestions.length} คะแนน`;
+
+
+function restartApp() {
+    document.getElementById('result-view').classList.add('hidden');
+    document.getElementById('lesson-view').classList.remove('hidden');
+}
+</script>
+
+</body>
+</html>
